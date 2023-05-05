@@ -1,0 +1,21 @@
+version: '3'
+services:
+  product:
+    container_name: route_container
+    image: www.thinhlh.com/route_service:latest
+    ports:
+      - "8083:8083"
+    environment:
+      - MONGO_INITDB_HOST
+      - MONGO_INITDB_PORT
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    networks:
+      - app_network
+    restart: on-failure
+
+networks:
+  app_network:
+    external: true
+    driver: bridge

@@ -1,0 +1,21 @@
+package com.thlogistic.job.adapters.dtos;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductCreateJobDto {
+    @NotEmpty(message = "Product ID cannot be empty")
+    String productId;
+
+    @Min(value = 0, message = "Invalid weight")
+    Double weight;
+
+    @Min(value = 0, message = "Invalid grand total")
+    Double grandTotal;
+}
