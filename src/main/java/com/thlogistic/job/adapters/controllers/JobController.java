@@ -1,9 +1,7 @@
 package com.thlogistic.job.adapters.controllers;
 
-import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
-import com.thlogistic.job.adapters.dtos.CreateJobRequest;
-import com.thlogistic.job.adapters.dtos.CreateJobResponse;
-import com.thlogistic.job.adapters.dtos.PagingJobRequest;
+import com.thlogistic.job.adapters.dtos.*;
+import com.thlogistic.job.core.usecases.AddTransportationUseCase;
 import com.thlogistic.job.core.usecases.CreateJobUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobController extends BaseController implements JobResource {
 
     private final CreateJobUseCase createJobUseCase;
+
+    private final AddTransportationUseCase addTransportationUseCase;
 
     @Override
     public ResponseEntity<Object> listJob(PagingJobRequest request) {
@@ -29,6 +29,17 @@ public class JobController extends BaseController implements JobResource {
                 )
         );
         return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> addTransportation(String token, AddTransportationRequest request) {
+        addTransportationUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        request
+                )
+        );
+        return successResponse(true, null);
     }
 
 //    private final CreateLocationUseCase createLocationUseCase;

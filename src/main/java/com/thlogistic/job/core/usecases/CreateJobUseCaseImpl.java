@@ -44,7 +44,6 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         checkIfDeliveryTimeIsValid(requestContent.getDeliveryTime());
 
         JobEntity jobEntity = JobEntity.builder()
-                .driverId(null)
                 .routeId(routeId)
                 .status(JobStatus.OPEN.statusCode)
                 .mustDeliverAt(requestContent.getDeliveryTime())
@@ -97,6 +96,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
     }
 
     private Double calculateGrandTotal(ProductCreateJobDto dto) {
+        // TODO: calculateGrandTotal
         return dto.getGrandTotal();
     }
 }

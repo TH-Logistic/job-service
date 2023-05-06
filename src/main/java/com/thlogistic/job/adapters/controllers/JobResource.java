@@ -1,5 +1,6 @@
 package com.thlogistic.job.adapters.controllers;
 
+import com.thlogistic.job.adapters.dtos.AddTransportationRequest;
 import com.thlogistic.job.adapters.dtos.CreateJobRequest;
 import com.thlogistic.job.adapters.dtos.PagingJobRequest;
 import jakarta.validation.Valid;
@@ -15,6 +16,9 @@ interface JobResource {
 
     @PostMapping
     ResponseEntity<Object> createJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateJobRequest request);
+
+    @PostMapping("/add-transportation")
+    ResponseEntity<Object> addTransportation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody AddTransportationRequest request);
 
 //    @PutMapping("/{id}")
 //    ResponseEntity<Object> updateJob(@Valid @RequestBody UpdateJobRequest request, @PathVariable String id);

@@ -2,11 +2,14 @@ package com.thlogistic.job.entities;
 
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity(name = "driver_job")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DriverJobEntity {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")

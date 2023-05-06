@@ -18,7 +18,6 @@ public class JobEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     String jobId;
-    String driverId;
     String routeId;
     Integer status;
     String mustDeliverAt;
@@ -34,8 +33,8 @@ public class JobEntity {
     String pickUpContactNo;
     String unloadContactName;
     String unloadContactNo;
-    String fromGarage;
-    String toGarage;
+    String startingGarageId;
+    String endingGarageId;
     String notesToDriver;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
