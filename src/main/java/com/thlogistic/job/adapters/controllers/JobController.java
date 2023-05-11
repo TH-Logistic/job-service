@@ -16,6 +16,11 @@ public class JobController extends BaseController implements JobResource {
     private final AddTransportationUseCase addTransportationUseCase;
 
     @Override
+    public ResponseEntity<Object> getJob(String id) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<Object> listJob(PagingJobRequest request) {
         return null;
     }

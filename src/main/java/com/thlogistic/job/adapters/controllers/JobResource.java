@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/job")
 interface JobResource {
+
+    @GetMapping("/{id}")
+    ResponseEntity<Object> getJob(@PathVariable String id);
+
     @GetMapping("/list")
     ResponseEntity<Object> listJob(@Valid PagingJobRequest request);
 
