@@ -20,5 +20,5 @@ public interface ProductClient {
             "Content-Type: application/json",
             "Authorization: {token}"
     })
-    BaseResponse<List<GetProductDto>> findAllProductsByIds(@Param("token") String token, @Param("ids") String id);
+    BaseResponse<List<GetProductDto>> findAllProductsByIds(@Param("token") String token, @Param("ids") String ids);
 }

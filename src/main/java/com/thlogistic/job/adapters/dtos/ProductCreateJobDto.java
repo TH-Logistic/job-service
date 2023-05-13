@@ -15,7 +15,4 @@ public class ProductCreateJobDto {
 
     @Min(value = 0, message = "Invalid weight")
     Double weight;
-
-    @Min(value = 0, message = "Invalid grand total")
-    Double grandTotal;
 }

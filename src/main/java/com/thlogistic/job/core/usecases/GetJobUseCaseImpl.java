@@ -69,6 +69,8 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
             JobEntity jobEntity
     ) {
         builder.status(jobEntity.getStatus());
+        builder.totalPrice(jobEntity.getTotalPrice());
+        builder.isTonBased(jobEntity.getIsTonBased());
         builder.mustDeliverAt(jobEntity.getMustDeliverAt());
         builder.createdAt(jobEntity.getCreatedAt());
         builder.assignedAt(jobEntity.getAssignedAt());
