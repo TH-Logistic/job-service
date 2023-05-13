@@ -1,6 +1,6 @@
 package com.thlogistic.job.adapters.dtos;
 
-import com.thlogistic.job.client.healthcheck.GetHealthcheckDto;
+import com.thlogistic.job.client.healthcheck.GetHealthcheckClientResponse;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.route.GetRouteDto;
 import com.thlogistic.job.client.transportation.GetDriverInfoDto;
@@ -23,9 +23,7 @@ public class GetJobResponse {
     GetGarageDto endingGarage;
     List<GetProductDto> products;
     GetRouteDto route;
-    GetDriverInfoDto mainDriver;
-    GetDriverInfoDto coDriver;
-    GetHealthcheckDto healthcheck;
+    GetHealthcheckClientResponse healthcheck;
     Integer status;
     Double totalPrice;
     Boolean isTonBased;

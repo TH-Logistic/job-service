@@ -1,12 +1,13 @@
 package com.thlogistic.job.adapters.controllers;
 
 import com.thlogistic.job.adapters.dtos.*;
-import com.thlogistic.job.core.usecases.AddTransportationUseCase;
-import com.thlogistic.job.core.usecases.CreateJobUseCase;
-import com.thlogistic.job.core.usecases.GetJobUseCase;
+import com.thlogistic.job.core.usecases.*;
+import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,6 +16,8 @@ public class JobController extends BaseController implements JobResource {
     private final CreateJobUseCase createJobUseCase;
     private final GetJobUseCase getJobUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
+    private final UpdateJobStatusUseCase updateJobStatusUseCase;
+    private final GetUpcomingJobUseCase getUpcomingJobUseCase;
 
     @Override
     public ResponseEntity<Object> getJob(String token, String id) {
@@ -44,6 +47,17 @@ public class JobController extends BaseController implements JobResource {
     }
 
     @Override
+    public ResponseEntity<Object> updateJobStatus(String token, UpdateJobStatusRequest request, String jobId) {
+        updateJobStatusUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        new Pair<>(jobId, request)
+                )
+        );
+        return successResponse(true, null);
+    }
+
+    @Override
     public ResponseEntity<Object> addTransportation(String token, AddTransportationRequest request) {
         addTransportationUseCase.execute(
                 new BaseTokenRequest<>(
@@ -54,26 +68,19 @@ public class JobController extends BaseController implements JobResource {
         return successResponse(true, null);
     }
 
-//    private final CreateLocationUseCase createLocationUseCase;
-//    private final UpdateLocationUseCase updateLocationUseCase;
-//    private final PagingLocationUseCase pagingLocationUseCase;
-//
-//    @Override
-//    public ResponseEntity<Object> listLocation(PagingLocationRequest request) {
-//        BasePagingResponse<GetLocationResponse> result = pagingLocationUseCase.execute(request);
-//        return successResponse(result, null);
-//    }
-//
-//    @Override
-//    public ResponseEntity<Object> createLocation(CreateLocationRequest request) {
-//        CreateLocationResponse result = createLocationUseCase.execute(request);
-//        return successResponse(result, null);
-//    }
-//
-//    @Override
-//    public ResponseEntity<Object> updateLocation(UpdateLocationRequest request, String id) {
-//        updateLocationUseCase.execute(Pair.of(id, request));
-//        return successResponse(true, null);
-//    }
+    @Override
+    public ResponseEntity<Object> getUpcomingJobs(String token, String driverId) {
+        List<GetJobResponse> result = getUpcomingJobUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        driverId
+                )
+        );
+        return successResponse(result, null);
+    }
 
+    @Override
+    public ResponseEntity<Object> getHistoryJobs(String token, String driverId) {
+        return null;
+    }
 }

@@ -4,8 +4,11 @@ import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostgresDriverJobRepository extends JpaRepository<DriverJobEntity, String> {
-    Optional<DriverJobEntity> findByJob_JobId(String jobId);
+    List<DriverJobEntity> findByJob_JobId(String jobId);
+    List<DriverJobEntity> findByDriverIdIsAndJob_StatusAndJob_EndingGarageIdNotNull(String driverId, Integer status);
+    List<DriverJobEntity> findByDriverIdIsAndJob_Status(String driverId, Integer status);
 }

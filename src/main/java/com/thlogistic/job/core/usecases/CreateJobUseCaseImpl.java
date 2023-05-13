@@ -12,6 +12,7 @@ import com.thlogistic.job.client.route.GetRouteDto;
 import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.core.entities.JobProduct;
 import com.thlogistic.job.core.entities.JobStatus;
+import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobProductRepository;
 import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.JobEntity;
@@ -31,6 +32,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
 
     private final JobRepository jobRepository;
     private final JobProductRepository jobProductRepository;
+    private final DriverJobRepository driverJobRepository;
     private final ProductClient productClient;
     private final RouteClient routeClient;
 

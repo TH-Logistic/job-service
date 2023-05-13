@@ -3,6 +3,7 @@ package com.thlogistic.job.adapters.controllers;
 import com.thlogistic.job.adapters.dtos.AddTransportationRequest;
 import com.thlogistic.job.adapters.dtos.CreateJobRequest;
 import com.thlogistic.job.adapters.dtos.PagingJobRequest;
+import com.thlogistic.job.adapters.dtos.UpdateJobStatusRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,15 @@ interface JobResource {
     @PostMapping
     ResponseEntity<Object> createJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateJobRequest request);
 
+    @PutMapping("/job-status/{jobId}")
+    ResponseEntity<Object> updateJobStatus(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody UpdateJobStatusRequest request, @PathVariable String jobId);
+
     @PostMapping("/add-transportation")
     ResponseEntity<Object> addTransportation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody AddTransportationRequest request);
 
-//    @PutMapping("/{id}")
-//    ResponseEntity<Object> updateJob(@Valid @RequestBody UpdateJobRequest request, @PathVariable String id);
+    @GetMapping("/upcoming-jobs/{driverId}")
+    ResponseEntity<Object> getUpcomingJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
+
+    @GetMapping("/history-jobs/{driverId}")
+    ResponseEntity<Object> getHistoryJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
 }

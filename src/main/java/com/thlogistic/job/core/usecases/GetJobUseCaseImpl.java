@@ -5,7 +5,7 @@ import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
 import com.thlogistic.job.adapters.dtos.GetJobResponse;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
-import com.thlogistic.job.client.healthcheck.GetHealthcheckDto;
+import com.thlogistic.job.client.healthcheck.GetHealthcheckClientResponse;
 import com.thlogistic.job.client.healthcheck.HealthcheckClient;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.product.ProductClient;
@@ -14,6 +14,8 @@ import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.GetGarageDto;
 import com.thlogistic.job.client.transportation.GetTransportationDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
+import com.thlogistic.job.client.user.UserClient;
+import com.thlogistic.job.client.user.UserInfoDto;
 import com.thlogistic.job.core.entities.JobStatus;
 import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobProductRepository;
@@ -34,7 +36,6 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
     private final JobRepository jobRepository;
     private final DriverJobRepository driverJobRepository;
     private final JobProductRepository jobProductRepository;
-
     private final ProductClient productClient;
     private final RouteClient routeClient;
     private final TransportationClient transportationClient;
@@ -53,11 +54,9 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
 
         // Get data
         buildJobResponse(responseBuilder, jobEntity);
-        // TODO: Main driver, co driver
         getProductResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
         getRouteResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
         getTransportationResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
-        getDriverResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
         getGarageResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
         getHealthcheckResponse(responseBuilder, jobEntity, baseTokenRequest.getToken());
 
@@ -74,11 +73,11 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
         builder.mustDeliverAt(jobEntity.getMustDeliverAt());
         builder.createdAt(jobEntity.getCreatedAt());
         builder.assignedAt(jobEntity.getAssignedAt());
-        builder.acceptedAt(jobEntity.getAcceptedAt());
+        builder.acceptedAt(jobEntity.getStartedAt());
         builder.pickUpArriveAt(jobEntity.getPickUpArriveAt());
         builder.pickUpDoneAt(jobEntity.getPickUpDoneAt());
-        builder.unloadArriveAt(jobEntity.getUnloadArriveAt());
-        builder.unloadDoneAt(jobEntity.getUnloadDoneAt());
+        builder.unloadArriveAt(jobEntity.getDeliveryArriveAt());
+        builder.unloadDoneAt(jobEntity.getDischargedAt());
         builder.completedAt(jobEntity.getCompletedAt());
         builder.pickUpContactName(jobEntity.getPickUpContactName());
         builder.pickUpContactNo(jobEntity.getPickUpContactNo());
@@ -112,19 +111,19 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
             String authToken
     ) {
         if (jobEntity.getStatus() >= JobStatus.ASSIGNED.statusCode) {
-            Optional<DriverJobEntity> driverJobEntityOptional = driverJobRepository.findByJobId(jobEntity.getJobId());
-            if (driverJobEntityOptional.isEmpty()) {
+            List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
+                    jobEntity.getJobId()
+            );
+            if (driverJobEntities.isEmpty()) {
                 throw new CustomRuntimeException("An error occurred when loading driver");
             }
-            DriverJobEntity driverJobEntity = driverJobEntityOptional.get();
+            DriverJobEntity driverJobEntity = driverJobEntities.get(0);
 
             String driverId = driverJobEntity.getDriverId();
             try {
                 BaseResponse<GetTransportationDto> getTransportationResponse =
                         transportationClient.getTransportationByDriverId(authToken, driverId);
-
                 builder.transportation(getTransportationResponse.getData());
-
             } catch (Exception e) {
                 throw new CustomRuntimeException("An error occurred when loading transportation");
             }
@@ -163,14 +162,6 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
         }
     }
 
-    private void getDriverResponse(
-            GetJobResponse.GetJobResponseBuilder builder,
-            JobEntity jobEntity,
-            String authToken
-    ) {
-
-    }
-
     private void getRouteResponse(
             GetJobResponse.GetJobResponseBuilder builder,
             JobEntity jobEntity,
@@ -191,7 +182,7 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
     ) {
         if (jobEntity.getStatus() >= JobStatus.JOB_STARTED.statusCode) {
             try {
-                BaseResponse<GetHealthcheckDto> getHealthcheckResponse =
+                BaseResponse<GetHealthcheckClientResponse> getHealthcheckResponse =
                         healthcheckClient.getHealthcheck(authToken, jobEntity.getJobId());
                 builder.healthcheck(getHealthcheckResponse.getData());
             } catch (Exception e) {

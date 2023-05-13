@@ -1,10 +1,10 @@
 package com.thlogistic.job.client.healthcheck;
 
 import com.thlogistic.job.adapters.dtos.BaseResponse;
-import com.thlogistic.job.client.product.GetProductDto;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface HealthcheckClient {
     @RequestLine("GET /api/v1/healthcheck/{jobId}")
@@ -12,5 +12,12 @@ public interface HealthcheckClient {
             "Content-Type: application/json",
             "Authorization: {token}"
     })
-    BaseResponse<GetHealthcheckDto> getHealthcheck(@Param("token") String token, @Param("jobId") String jobId);
+    BaseResponse<GetHealthcheckClientResponse> getHealthcheck(@Param("token") String token, @Param("jobId") String jobId);
+
+    @RequestLine("POST /api/v1/healthcheck")
+    @Headers({
+            "Content-Type: application/json",
+            "Authorization: {token}"
+    })
+    BaseResponse<CreateHealthcheckClientResponse> createHealthcheck(@Param("token") String token, @RequestBody CreateHealthcheckClientRequest healthcheckRequest);
 }

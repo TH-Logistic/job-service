@@ -25,11 +25,11 @@ public class JobEntity {
     String mustDeliverAt;
     String createdAt;
     String assignedAt;
-    String acceptedAt;
+    String startedAt;
     String pickUpArriveAt;
     String pickUpDoneAt;
-    String unloadArriveAt;
-    String unloadDoneAt;
+    String deliveryArriveAt;
+    String dischargedAt;
     String completedAt;
     String pickUpContactName;
     String pickUpContactNo;

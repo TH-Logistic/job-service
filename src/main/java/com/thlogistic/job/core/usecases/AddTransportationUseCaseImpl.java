@@ -55,8 +55,8 @@ public class AddTransportationUseCaseImpl implements AddTransportationUseCase {
 
         addDriverJob(
                 jobEntityOptional.get(),
-                getTransportationDto.getMainDriverInfo().getId(),
-                getTransportationDto.getCoDriverInfo().getId()
+                getTransportationDto.getMainDriver().getId(),
+                getTransportationDto.getCoDriver().getId()
         );
 
         updateJobEntity(jobEntityOptional.get(), getTransportationDto.getGarage().getId());
@@ -73,19 +73,17 @@ public class AddTransportationUseCaseImpl implements AddTransportationUseCase {
     }
 
     private void addDriverJob(JobEntity jobEntity, String mainDriverId, String coDriverId) {
-
-
         DriverJobEntity mainDriver = DriverJobEntity.builder()
-                .driverJobId(mainDriverId)
+                .driverId(mainDriverId)
                 .job(jobEntity)
                 .build();
 
         DriverJobEntity coDriver = DriverJobEntity.builder()
-                .driverJobId(coDriverId)
+                .driverId(coDriverId)
                 .job(jobEntity)
                 .build();
 
-        driverJobRepository.insert(mainDriver);
-        driverJobRepository.insert(coDriver);
+        driverJobRepository.save(mainDriver);
+        driverJobRepository.save(coDriver);
     }
 }

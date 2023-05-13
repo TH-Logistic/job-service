@@ -14,6 +14,6 @@ public class GetTransportationDto {
     Integer deliveryStatus;
     Boolean isInGarage;
     GetGarageDto garage;
-    GetDriverInfoDto mainDriverInfo;
-    GetDriverInfoDto coDriverInfo;
+    GetDriverInfoDto mainDriver;
+    GetDriverInfoDto coDriver;
 }
