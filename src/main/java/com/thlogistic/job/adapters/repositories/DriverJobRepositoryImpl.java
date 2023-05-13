@@ -29,6 +29,11 @@ public class DriverJobRepositoryImpl implements DriverJobRepository {
     }
 
     @Override
+    public Optional<DriverJobEntity> findByJobId(String jobId) {
+        return repository.findByJob_JobId(jobId);
+    }
+
+    @Override
     public BasePagingQueryResult<List<DriverJobEntity>> paging(String keyword, Integer page, Integer size) {
 //        Pageable pageable = PageRequest.of(page, size);
 //        Page<JobEntity> jobs;

@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface JobProductRepository {
     JobProductKey insert(JobProductEntity job);
     JobProductKey update(JobProductEntity job);
-    Optional<JobProductEntity> findById(String id);
+    List<JobProductEntity> findAllByJobId(String jobId);
     BasePagingQueryResult<List<JobProductEntity>> paging(String keyword, Integer page, Integer size);
     List<JobProductEntity> findByKeyword(String keyword);
 

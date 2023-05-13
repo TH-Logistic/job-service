@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetTransportationDto {
+public class GetTransportationNoDriverInfoDto {
     String id;
     String licensePlate;
     Double load;
     Integer deliveryStatus;
     Boolean isInGarage;
     GetGarageDto garage;
-    GetDriverInfoDto mainDriverInfo;
-    GetDriverInfoDto coDriverInfo;
 }

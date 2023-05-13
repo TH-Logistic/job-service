@@ -25,9 +25,10 @@ public class JobProductRepositoryImpl implements JobProductRepository {
     }
 
     @Override
-    public Optional<JobProductEntity> findById(String id) {
-        return null;
+    public List<JobProductEntity> findAllByJobId(String jobId) {
+        return repository.findAllByJob_JobId(jobId);
     }
+
 
     @Override
     public BasePagingQueryResult<List<JobProductEntity>> paging(String keyword, Integer page, Integer size) {

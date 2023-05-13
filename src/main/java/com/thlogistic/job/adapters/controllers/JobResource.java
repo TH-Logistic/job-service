@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 interface JobResource {
 
     @GetMapping("/{id}")
-    ResponseEntity<Object> getJob(@PathVariable String id);
+    ResponseEntity<Object> getJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id);
 
     @GetMapping("/list")
     ResponseEntity<Object> listJob(@Valid PagingJobRequest request);

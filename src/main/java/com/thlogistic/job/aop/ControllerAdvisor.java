@@ -37,6 +37,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(CustomRuntimeException.class)
+    public ResponseEntity<Object> handleCustomRuntimeException(
+            CustomRuntimeException ex, WebRequest request) {
+        Map<String, Object> response = ErrorResponse.errorResponse(ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequestException(
             BadRequestException ex, WebRequest request) {

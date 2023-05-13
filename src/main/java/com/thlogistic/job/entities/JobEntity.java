@@ -20,6 +20,8 @@ public class JobEntity {
     String jobId;
     String routeId;
     Integer status;
+    Double totalPrice;
+    Boolean isTonBased;
     String mustDeliverAt;
     String createdAt;
     String assignedAt;

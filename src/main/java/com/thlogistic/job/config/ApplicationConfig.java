@@ -1,6 +1,7 @@
 package com.thlogistic.job.config;
 
 import com.thlogistic.job.client.auth.AuthorizationClient;
+import com.thlogistic.job.client.healthcheck.HealthcheckClient;
 import com.thlogistic.job.client.product.ProductClient;
 import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.TransportationClient;
@@ -21,6 +22,7 @@ public class ApplicationConfig {
     public static final String PRODUCT_BASE_URL = "http://" + "www.thinhlh.com" + ":8080";
     public static final String ROUTE_BASE_URL = "http://" + "www.thinhlh.com" + ":8083";
     public static final String TRANSPORTATION_BASE_URL = "http://" + "www.thinhlh.com" + ":8081";
+    public static final String HEALTHCHECK_BASE_URL = "http://" + "www.thinhlh.com" + ":8084";
 
     @Bean
     public AuthorizationClient authorizationClient() {
@@ -56,6 +58,15 @@ public class ApplicationConfig {
                 .encoder(new GsonEncoder())
                 .decoder(new GsonDecoder())
                 .target(TransportationClient.class, TRANSPORTATION_BASE_URL);
+    }
+
+    @Bean
+    public HealthcheckClient healthcheckClient() {
+        return Feign.builder()
+                .client(new OkHttpClient())
+                .encoder(new GsonEncoder())
+                .decoder(new GsonDecoder())
+                .target(HealthcheckClient.class, HEALTHCHECK_BASE_URL);
     }
 
 }

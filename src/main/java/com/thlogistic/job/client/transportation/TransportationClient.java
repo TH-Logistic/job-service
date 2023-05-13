@@ -14,6 +14,13 @@ public interface TransportationClient {
     })
     BaseResponse<GetTransportationDto> getTransportation(@Param("token") String token, @Param("id") String id);
 
+    @RequestLine("GET /api/v1/transportation/find-by-driver/{driverId}")
+    @Headers({
+            "Content-Type: application/json",
+            "Authorization: {token}"
+    })
+    BaseResponse<GetTransportationDto> getTransportationByDriverId(@Param("token") String token, @Param("id") String driverId);
+
     @RequestLine("GET /api/v1/garage/{id}")
     @Headers({
             "Content-Type: application/json",

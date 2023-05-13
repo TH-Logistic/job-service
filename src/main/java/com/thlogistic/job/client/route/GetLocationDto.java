@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetSimpleLocationDto {
+public class GetLocationDto {
     String id;
     String name;
     String address;
+    Double latitude;
+    Double longitude;
 }

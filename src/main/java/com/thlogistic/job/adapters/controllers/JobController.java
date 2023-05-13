@@ -3,6 +3,7 @@ package com.thlogistic.job.adapters.controllers;
 import com.thlogistic.job.adapters.dtos.*;
 import com.thlogistic.job.core.usecases.AddTransportationUseCase;
 import com.thlogistic.job.core.usecases.CreateJobUseCase;
+import com.thlogistic.job.core.usecases.GetJobUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,12 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobController extends BaseController implements JobResource {
 
     private final CreateJobUseCase createJobUseCase;
-
+    private final GetJobUseCase getJobUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
 
     @Override
-    public ResponseEntity<Object> getJob(String id) {
-        return null;
+    public ResponseEntity<Object> getJob(String token, String id) {
+        GetJobResponse result = getJobUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        id
+                )
+        );
+        return successResponse(result, null);
     }
 
     @Override
