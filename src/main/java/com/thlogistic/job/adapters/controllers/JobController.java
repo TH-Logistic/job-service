@@ -16,6 +16,7 @@ public class JobController extends BaseController implements JobResource {
     private final CreateJobUseCase createJobUseCase;
     private final GetJobUseCase getJobUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
+    private final AddEndingGarageUseCase addEndingGarageUseCase;
     private final UpdateJobStatusUseCase updateJobStatusUseCase;
     private final GetUpcomingJobUseCase getUpcomingJobUseCase;
 
@@ -31,7 +32,7 @@ public class JobController extends BaseController implements JobResource {
     }
 
     @Override
-    public ResponseEntity<Object> listJob(PagingJobRequest request) {
+    public ResponseEntity<Object> listJob(String token, ListJobPagingRequest request) {
         return null;
     }
 
@@ -60,6 +61,17 @@ public class JobController extends BaseController implements JobResource {
     @Override
     public ResponseEntity<Object> addTransportation(String token, AddTransportationRequest request) {
         addTransportationUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        request
+                )
+        );
+        return successResponse(true, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> addEndingGarage(String token, AddEndingGarageRequest request) {
+        addEndingGarageUseCase.execute(
                 new BaseTokenRequest<>(
                         token,
                         request

@@ -13,6 +13,7 @@ import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -45,14 +46,23 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                 if (!currentJobStatusCode.equals(JobStatus.ASSIGNED.statusCode)) {
                     throw new BadRequestException("Invalid job status");
                 }
+
+                if (jobEntity.getEndingGarageId() == null) {
+                    throw new BadRequestException("Cannot start job without ending garage");
+                }
+
                 jobEntity.setStatus(JobStatus.JOB_STARTED.statusCode);
                 jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeFormatted());
-                if (requestContent.getCreateHealthCheck() == null) {
+                if (requestContent.getHealthcheck() == null ||
+                        !Objects.equals(requestContent.getHealthcheck().getJobId(), jobEntity.getJobId())
+                ) {
                     throw new BadRequestException("Invalid healthcheck");
                 } else {
                     try {
-                        healthcheckClient.createHealthcheck(token, requestContent.getCreateHealthCheck());
+                        healthcheckClient.createHealthcheck(token, requestContent.getHealthcheck());
                     } catch (Exception e) {
+                        System.out.println("justin token: " + token);
+                        System.out.println("justin exception: " + e.getMessage());
                         throw new CustomRuntimeException("An error occurred when update healthcheck");
                     }
                 }

@@ -1,9 +1,6 @@
 package com.thlogistic.job.adapters.controllers;
 
-import com.thlogistic.job.adapters.dtos.AddTransportationRequest;
-import com.thlogistic.job.adapters.dtos.CreateJobRequest;
-import com.thlogistic.job.adapters.dtos.PagingJobRequest;
-import com.thlogistic.job.adapters.dtos.UpdateJobStatusRequest;
+import com.thlogistic.job.adapters.dtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +14,7 @@ interface JobResource {
     ResponseEntity<Object> getJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id);
 
     @GetMapping("/list")
-    ResponseEntity<Object> listJob(@Valid PagingJobRequest request);
+    ResponseEntity<Object> listJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid ListJobPagingRequest request);
 
     @PostMapping
     ResponseEntity<Object> createJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateJobRequest request);
@@ -27,6 +24,9 @@ interface JobResource {
 
     @PostMapping("/add-transportation")
     ResponseEntity<Object> addTransportation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody AddTransportationRequest request);
+
+    @PostMapping("/add-ending-garage")
+    ResponseEntity<Object> addEndingGarage(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody AddEndingGarageRequest request);
 
     @GetMapping("/upcoming-jobs/{driverId}")
     ResponseEntity<Object> getUpcomingJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);

@@ -40,7 +40,5 @@ public class GetJobResponse {
     String pickUpContactNo;
     String unloadContactName;
     String unloadContactNo;
-    String startingGarageId;
-    String endingGarageId;
     String notesToDriver;
 }

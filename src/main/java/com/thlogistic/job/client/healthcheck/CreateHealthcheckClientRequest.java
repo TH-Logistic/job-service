@@ -14,22 +14,22 @@ public class CreateHealthcheckClientRequest {
     String jobId;
 
     @NotNull(message = "Invalid tires' status value")
-    boolean isTiresOk;
+    Boolean isTiresOk;
 
     @NotNull(message = "Invalid light's status value")
-    boolean isLightOk;
+    Boolean isLightOk;
 
     @NotNull(message = "Invalid brake's status value")
-    boolean isBrakeOk;
+    Boolean isBrakeOk;
 
     @NotNull(message = "Invalid fluid level's status value")
-    boolean isFluidLevelOk;
+    Boolean isFluidLevelOk;
 
     @NotNull(message = "Invalid battery's status value")
-    boolean isBatteryOk;
+    Boolean isBatteryOk;
 
     @NotNull(message = "Invalid wiper's status value")
-    boolean isWiperOk;
+    Boolean isWiperOk;
 
     String note;
 
