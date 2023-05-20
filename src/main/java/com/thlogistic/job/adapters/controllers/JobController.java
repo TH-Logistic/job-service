@@ -15,10 +15,12 @@ public class JobController extends BaseController implements JobResource {
 
     private final CreateJobUseCase createJobUseCase;
     private final GetJobUseCase getJobUseCase;
+    private final ListJobUseCase listJobUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
     private final AddEndingGarageUseCase addEndingGarageUseCase;
     private final UpdateJobStatusUseCase updateJobStatusUseCase;
     private final GetUpcomingJobUseCase getUpcomingJobUseCase;
+    private final GetHistoryJobUseCase getHistoryJobUseCase;
 
     @Override
     public ResponseEntity<Object> getJob(String token, String id) {
@@ -33,7 +35,13 @@ public class JobController extends BaseController implements JobResource {
 
     @Override
     public ResponseEntity<Object> listJob(String token, ListJobPagingRequest request) {
-        return null;
+        BasePagingResponse<GetJobPagingResponse> result = listJobUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        request
+                )
+        );
+        return successResponse(result, null);
     }
 
     @Override
@@ -92,7 +100,13 @@ public class JobController extends BaseController implements JobResource {
     }
 
     @Override
-    public ResponseEntity<Object> getHistoryJobs(String token, String driverId) {
-        return null;
+    public ResponseEntity<Object> getHistoryJobs(String token, String driverId, String date) {
+        List<GetJobResponse> result = getHistoryJobUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        new GetHistoryJobRequest(driverId, date)
+                )
+        );
+        return successResponse(result, null);
     }
 }

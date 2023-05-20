@@ -32,5 +32,5 @@ interface JobResource {
     ResponseEntity<Object> getUpcomingJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
 
     @GetMapping("/history-jobs/{driverId}")
-    ResponseEntity<Object> getHistoryJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
+    ResponseEntity<Object> getHistoryJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId, @RequestParam String date);
 }

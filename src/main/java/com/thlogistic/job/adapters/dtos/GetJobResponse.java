@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GetJobResponse {
+    String id;
     GetTransportationDto transportation;
     GetGarageDto startingGarage;
     GetGarageDto endingGarage;

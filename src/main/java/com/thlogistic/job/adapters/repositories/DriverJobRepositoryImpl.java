@@ -39,8 +39,8 @@ public class DriverJobRepositoryImpl implements DriverJobRepository {
     }
 
     @Override
-    public List<DriverJobEntity> findHistoryJobByDriverIdAndJobStatus(String driverId, Integer status) {
-        return repository.findByDriverIdIsAndJob_Status(driverId, status);
+    public List<DriverJobEntity> findHistoryJobByDriverIdAndJobStatus(String driverId, String date, Integer status) {
+        return repository.findByDriverIdAndJob_CreatedAtContainsAndJob_Status(driverId, date, status);
     }
 
     @Override

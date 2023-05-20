@@ -9,9 +9,15 @@ import java.util.Optional;
 
 public interface JobRepository {
     String insert(JobEntity job);
-    String save(JobEntity job);
-    Optional<JobEntity> findById(String id);
-    BasePagingQueryResult<List<JobEntity>> paging(String keyword, Integer page, Integer size);
-    List<JobEntity> findByKeyword(String keyword);
 
+    String save(JobEntity job);
+
+    Optional<JobEntity> findById(String id);
+
+    BasePagingQueryResult<List<JobEntity>> paging(String keyword,
+                                                  List<Integer> statusList,
+                                                  Double minPrice,
+                                                  Double maxPrice,
+                                                  Integer page,
+                                                  Integer size);
 }

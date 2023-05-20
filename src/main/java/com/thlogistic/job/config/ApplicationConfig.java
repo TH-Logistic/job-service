@@ -15,16 +15,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ApplicationConfig {
+    private static final String httpPath = "http://";
+    private static final String domainUrl = System.getenv("DOMAIN_URL");
 
-    // TODO: Change this into env var
-    private static String domainUrl = System.getenv("DOMAIN_URL");
-
-    public static final String AUTHORIZATION_BASE_URL = "http://" + "www.thinhlh.com" + ":8000";
-    public static final String PRODUCT_BASE_URL = "http://" + "www.thinhlh.com" + ":8080";
-    public static final String ROUTE_BASE_URL = "http://" + "www.thinhlh.com" + ":8083";
-    public static final String TRANSPORTATION_BASE_URL = "http://" + "www.thinhlh.com" + ":8081";
-    public static final String HEALTHCHECK_BASE_URL = "http://" + "www.thinhlh.com" + ":8084";
-    public static final String USER_BASE_URL = "http://" + "www.thinhlh.com" + ":8001";
+    public static final String AUTHORIZATION_BASE_URL = httpPath + domainUrl + ":8000";
+    public static final String PRODUCT_BASE_URL = httpPath + domainUrl + ":8080";
+    public static final String ROUTE_BASE_URL = httpPath + domainUrl + ":8083";
+    public static final String TRANSPORTATION_BASE_URL = httpPath + domainUrl + ":8081";
+    public static final String HEALTHCHECK_BASE_URL = httpPath + domainUrl + ":8084";
+    public static final String USER_BASE_URL = httpPath + domainUrl + ":8001";
 
     @Bean
     public AuthorizationClient authorizationClient() {

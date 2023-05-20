@@ -61,8 +61,6 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                     try {
                         healthcheckClient.createHealthcheck(token, requestContent.getHealthcheck());
                     } catch (Exception e) {
-                        System.out.println("justin token: " + token);
-                        System.out.println("justin exception: " + e.getMessage());
                         throw new CustomRuntimeException("An error occurred when update healthcheck");
                     }
                 }

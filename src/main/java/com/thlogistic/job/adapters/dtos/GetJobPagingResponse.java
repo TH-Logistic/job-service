@@ -12,9 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GetJobPagingResponse {
+    String id;
     String licensePlate;
     String driverInCharge;
-    List<Integer> productTypeList;
+    List<String> products;
     String createdAt;
     String pickUpAt;
     String unloadAt;
