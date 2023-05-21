@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateJobDto {
+public class ProductCreateJobRequest {
     @NotEmpty(message = "Product ID cannot be empty")
     String productId;
 

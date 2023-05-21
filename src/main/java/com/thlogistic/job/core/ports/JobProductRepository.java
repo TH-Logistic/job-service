@@ -12,7 +12,6 @@ public interface JobProductRepository {
     JobProductKey insert(JobProductEntity job);
     JobProductKey update(JobProductEntity job);
     List<JobProductEntity> findAllByJobId(String jobId);
-    BasePagingQueryResult<List<JobProductEntity>> paging(String keyword, Integer page, Integer size);
-    List<JobProductEntity> findByKeyword(String keyword);
+    List<JobProductEntity> findByProductId(String productId);
 
 }

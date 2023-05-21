@@ -109,4 +109,9 @@ public class JobController extends BaseController implements JobResource {
         );
         return successResponse(result, null);
     }
+
+    @Override
+    public ResponseEntity<Object> getStatisticByProduct(String token, String productId) {
+        return null;
+    }
 }

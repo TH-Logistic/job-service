@@ -29,31 +29,8 @@ public class JobProductRepositoryImpl implements JobProductRepository {
         return repository.findAllByJob_JobId(jobId);
     }
 
-
     @Override
-    public BasePagingQueryResult<List<JobProductEntity>> paging(String keyword, Integer page, Integer size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<JobProductEntity> jobProducts;
-//        if (keyword == null || keyword.isEmpty()) {
-//            jobProducts = repository.findAll(pageable);
-//        } else {
-//            jobProducts = repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(keyword, keyword, pageable);
-//        }
-//
-//        BasePagingQueryResult<List<JobProductEntity>> result = new BasePagingQueryResult<>();
-//        result.data = jobProducts.getContent();
-//        result.total = jobProducts.getTotalElements();
-//        result.totalPage = jobProducts.getTotalPages();
-//        return result;
-        return null;
-    }
-
-    @Override
-    public List<JobProductEntity> findByKeyword(String keyword) {
-//        if (keyword == null || keyword.isEmpty()) {
-//            throw new RuntimeException("Invalid keyword");
-//        }
-//        return repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(keyword, keyword);
-        return null;
+    public List<JobProductEntity> findByProductId(String productId) {
+        return repository.findAllByJobProductKey_ProductId(productId);
     }
 }

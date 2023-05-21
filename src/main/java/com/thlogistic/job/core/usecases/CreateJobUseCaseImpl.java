@@ -3,7 +3,7 @@ package com.thlogistic.job.core.usecases;
 import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
 import com.thlogistic.job.adapters.dtos.CreateJobRequest;
 import com.thlogistic.job.adapters.dtos.CreateJobResponse;
-import com.thlogistic.job.adapters.dtos.ProductCreateJobDto;
+import com.thlogistic.job.adapters.dtos.ProductCreateJobRequest;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
 import com.thlogistic.job.aop.exception.InvalidDateTimeFormatException;
 import com.thlogistic.job.client.product.GetProductDto;
@@ -42,7 +42,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         CreateJobRequest requestContent = baseTokenRequest.getRequestContent();
 
         List<String> productIds = requestContent.getProductList().stream().map(
-                ProductCreateJobDto::getProductId
+                ProductCreateJobRequest::getProductId
         ).toList();
 
         List<GetProductDto> checkedProduct = checkIfProductIdListIsValid(token, productIds);
@@ -119,7 +119,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         }
     }
 
-    private List<JobProduct> getJobProducts(List<GetProductDto> checkedProduct, List<ProductCreateJobDto> productsRequestContent) {
+    private List<JobProduct> getJobProducts(List<GetProductDto> checkedProduct, List<ProductCreateJobRequest> productsRequestContent) {
         List<JobProduct> jobProducts = new LinkedList<>();
         checkedProduct.forEach(p -> {
             Double productWeight = productsRequestContent.stream().filter(request -> {

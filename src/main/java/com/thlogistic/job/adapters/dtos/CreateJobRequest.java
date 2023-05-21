@@ -1,13 +1,9 @@
 package com.thlogistic.job.adapters.dtos;
 
-import com.thlogistic.job.aop.custom_validator.NoEmptyFields;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -17,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateJobRequest {
     @Size(min = 1, message = "Product ID list cannot be empty")
-    List<ProductCreateJobDto> productList;
+    List<ProductCreateJobRequest> productList;
     @NotEmpty(message = "Invalid route ID")
     String routeId;
     @NotEmpty(message = "Invalid delivery time")

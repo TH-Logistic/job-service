@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostgresJobProductRepository extends JpaRepository<JobProductEntity, JobProductKey> {
     List<JobProductEntity> findAllByJob_JobId(String jobId);
+
+    List<JobProductEntity> findAllByJobProductKey_ProductId(String jobId);
 }

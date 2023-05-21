@@ -33,4 +33,7 @@ interface JobResource {
 
     @GetMapping("/history-jobs/{driverId}")
     ResponseEntity<Object> getHistoryJobs(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId, @RequestParam String date);
+
+    @GetMapping("/statistic/product/{productId}")
+    ResponseEntity<Object> getStatisticByProduct(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String productId);
 }
