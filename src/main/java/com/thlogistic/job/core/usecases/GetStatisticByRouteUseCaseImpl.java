@@ -1,12 +1,13 @@
 package com.thlogistic.job.core.usecases;
 
-import com.thlogistic.job.adapters.dtos.*;
-import com.thlogistic.job.adapters.repositories.BasePagingQueryResult;
+import com.thlogistic.job.adapters.dtos.BaseResponse;
+import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
+import com.thlogistic.job.adapters.dtos.GetJobListNoRouteResponse;
+import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
+import com.thlogistic.job.adapters.dtos.statistic.JobStatisticDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.product.ProductClient;
-import com.thlogistic.job.client.route.GetRouteDto;
-import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.GetTransportationDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.entities.JobStatus;
@@ -25,75 +26,73 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ListJobUseCaseImpl implements ListJobUseCase {
+public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCase {
 
     private final JobRepository jobRepository;
     private final DriverJobRepository driverJobRepository;
     private final JobProductRepository jobProductRepository;
-    private final RouteClient routeClient;
-    private final ProductClient productClient;
     private final TransportationClient transportationClient;
+    private final ProductClient productClient;
 
     @Override
-    public BasePagingResponse<GetJobPagingResponse> execute(BaseTokenRequest<ListJobPagingRequest> baseTokenRequest) {
+    public GetJobStatisticResponse<GetJobListNoRouteResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
         String token = baseTokenRequest.getToken();
-        ListJobPagingRequest requestContent = baseTokenRequest.getRequestContent();
+        String routeId = baseTokenRequest.getRequestContent();
 
-        BasePagingQueryResult<List<JobEntity>> queryResult = jobRepository.paging(
-                requestContent.getKeyword(),
-                requestContent.getStatusList(),
-                requestContent.getMinOrderFee(),
-                requestContent.getMaxOrderFee(),
-                requestContent.getPage(),
-                requestContent.getSize()
-        );
+        List<JobEntity> jobEntityList = jobRepository.findByRouteId(routeId);
 
-        List<GetJobPagingResponse> responseContent = new LinkedList<>();
-        queryResult.getData().forEach(entity -> {
-            GetJobPagingResponse.GetJobPagingResponseBuilder responseBuilder = GetJobPagingResponse.builder();
-            getJobInfo(responseBuilder, entity);
-            getTransportationInfo(responseBuilder, entity, token);
-            getRouteInfo(responseBuilder, entity, token);
-            getProductInfo(responseBuilder, entity, token);
+        Double totalWeight = 0.0;
+        Integer totalTonBasedJob = 0;
+        Integer totalTripBasedJob = 0;
 
-            responseContent.add(responseBuilder.build());
-        });
+        // Response
+        GetJobStatisticResponse<GetJobListNoRouteResponse> response = new GetJobStatisticResponse<>();
+        List<GetJobListNoRouteResponse> jobPagingDto = new LinkedList<>();
+        JobStatisticDto jobStatisticDto = new JobStatisticDto();
 
-        BasePagingResponse<GetJobPagingResponse> response = new BasePagingResponse<>();
-        response.setContent(responseContent);
-        response.setTotal(queryResult.getTotal());
-        response.setTotalPage(queryResult.getTotalPage());
+        for (JobEntity jobEntity : jobEntityList) {
+            if (jobEntity.getIsTonBased()) {
+                totalTonBasedJob++;
+            } else {
+                totalTripBasedJob++;
+            }
+
+            for (JobProductEntity jobProductEntity: jobEntity.getJobProductList()) {
+                totalWeight += jobProductEntity.getWeight();
+            }
+
+            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder responseBuilder = GetJobListNoRouteResponse.builder();
+            getJobInfo(responseBuilder, jobEntity);
+            getProductInfo(responseBuilder, jobEntity, token);
+            getTransportationInfo(responseBuilder, jobEntity, token);
+            jobPagingDto.add(responseBuilder.build());
+        }
+
+        // Response
+        jobStatisticDto.setTotalTripBasedJob(totalTripBasedJob);
+        jobStatisticDto.setTotalTonBasedJob(totalTonBasedJob);
+        // TODO: total distance
+        jobStatisticDto.setTotalDistance(null);
+        jobStatisticDto.setTotalWeight(totalWeight);
+
+        response.setStatistic(jobStatisticDto);
+        response.setJobs(jobPagingDto);
 
         return response;
     }
 
     private void getJobInfo(
-            GetJobPagingResponse.GetJobPagingResponseBuilder builder,
+            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
         builder.createdAt(jobEntity.getCreatedAt());
-
-        String pickUpAt = jobEntity.getPickUpDoneAt();
-        if (pickUpAt == null || pickUpAt.isEmpty()) {
-            builder.pickUpAt(Const.Job.NOT_YET);
-        } else {
-            builder.pickUpAt(pickUpAt);
-        }
-
-        String unloadAt = jobEntity.getDischargedAt();
-        if (unloadAt == null || unloadAt.isEmpty()) {
-            builder.unloadAt(Const.Job.NOT_YET);
-        } else {
-            builder.unloadAt(unloadAt);
-        }
-
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());
     }
 
     private void getTransportationInfo(
-            GetJobPagingResponse.GetJobPagingResponseBuilder builder,
+            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {
@@ -121,22 +120,8 @@ public class ListJobUseCaseImpl implements ListJobUseCase {
         }
     }
 
-    private void getRouteInfo(
-            GetJobPagingResponse.GetJobPagingResponseBuilder builder,
-            JobEntity jobEntity,
-            String authToken
-    ) {
-        try {
-            BaseResponse<GetRouteDto> response = routeClient.getRoute(authToken, jobEntity.getRouteId());
-            builder.pickUpAt(response.getData().getFromLocation().getName());
-            builder.unloadAt(response.getData().getToLocation().getName());
-        } catch (Exception e) {
-            throw new CustomRuntimeException("An error occurred when loading route");
-        }
-    }
-
     private void getProductInfo(
-            GetJobPagingResponse.GetJobPagingResponseBuilder builder,
+            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {
@@ -146,7 +131,7 @@ public class ListJobUseCaseImpl implements ListJobUseCase {
         try {
             BaseResponse<List<GetProductDto>> response = productClient.findAllProductsByIds(
                     authToken,
-                    String.join(",", productIds)
+                    String.join(", ", productIds)
             );
             builder.products(response.getData().stream().map(GetProductDto::getName).toList());
         } catch (Exception e) {

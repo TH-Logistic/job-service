@@ -20,4 +20,6 @@ public interface JobRepository {
                                                   Double maxPrice,
                                                   Integer page,
                                                   Integer size);
+
+    List<JobEntity> findByRouteId(String routeId);
 }

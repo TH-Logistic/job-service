@@ -1,6 +1,7 @@
 package com.thlogistic.job.adapters.controllers;
 
 import com.thlogistic.job.adapters.dtos.*;
+import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
 import com.thlogistic.job.core.usecases.*;
 import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,14 @@ public class JobController extends BaseController implements JobResource {
 
     private final CreateJobUseCase createJobUseCase;
     private final GetJobUseCase getJobUseCase;
-    private final ListJobUseCase listJobUseCase;
+    private final GetJobPagingUseCase getJobPagingUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
     private final AddEndingGarageUseCase addEndingGarageUseCase;
     private final UpdateJobStatusUseCase updateJobStatusUseCase;
     private final GetUpcomingJobUseCase getUpcomingJobUseCase;
     private final GetHistoryJobUseCase getHistoryJobUseCase;
+    private final GetStatisticByProductUseCase getStatisticByProductUseCase;
+    private final GetStatisticByRouteUseCase getStatisticByRouteUseCase;
 
     @Override
     public ResponseEntity<Object> getJob(String token, String id) {
@@ -35,7 +38,7 @@ public class JobController extends BaseController implements JobResource {
 
     @Override
     public ResponseEntity<Object> listJob(String token, ListJobPagingRequest request) {
-        BasePagingResponse<GetJobPagingResponse> result = listJobUseCase.execute(
+        BasePagingResponse<GetJobPagingResponse> result = getJobPagingUseCase.execute(
                 new BaseTokenRequest<>(
                         token,
                         request
@@ -112,6 +115,23 @@ public class JobController extends BaseController implements JobResource {
 
     @Override
     public ResponseEntity<Object> getStatisticByProduct(String token, String productId) {
-        return null;
+        GetJobStatisticResponse<GetJobListNoProductResponse> result = getStatisticByProductUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        productId
+                )
+        );
+        return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> getStatisticByRoute(String token, String routeId) {
+        GetJobStatisticResponse<GetJobListNoRouteResponse> result = getStatisticByRouteUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        routeId
+                )
+        );
+        return successResponse(result, null);
     }
 }

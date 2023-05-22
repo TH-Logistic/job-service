@@ -7,5 +7,5 @@ import com.thlogistic.job.adapters.dtos.ListJobPagingRequest;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ListJobUseCase extends BaseUseCase<BaseTokenRequest<ListJobPagingRequest>, BasePagingResponse<GetJobPagingResponse>> {
+public interface GetJobPagingUseCase extends BaseUseCase<BaseTokenRequest<ListJobPagingRequest>, BasePagingResponse<GetJobPagingResponse>> {
 }

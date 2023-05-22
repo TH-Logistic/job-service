@@ -62,4 +62,9 @@ public class JobRepositoryImpl implements JobRepository {
         result.totalPage = jobs.getTotalPages();
         return result;
     }
+
+    @Override
+    public List<JobEntity> findByRouteId(String routeId) {
+        return repository.findAllByRouteId(routeId);
+    }
 }

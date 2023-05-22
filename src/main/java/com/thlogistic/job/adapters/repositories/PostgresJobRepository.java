@@ -26,4 +26,6 @@ public interface PostgresJobRepository extends JpaRepository<JobEntity, String> 
     Page<JobEntity> findAllByJobIdContainingAndStatusIsInAndTotalPriceBetween(
             String jobId, Collection<Integer> statusList, Double minPrice, Double maxPrice, Pageable pageable
     );
+
+    List<JobEntity> findAllByRouteId(String routeId);
 }
