@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface PostgresDriverJobRepository extends JpaRepository<DriverJobEntity, String> {
     List<DriverJobEntity> findByJob_JobId(String jobId);
+    List<DriverJobEntity> findByDriverId(String driverId);
     List<DriverJobEntity> findByDriverIdIsAndJob_StatusAndJob_EndingGarageIdNotNull(String driverId, Integer status);
     List<DriverJobEntity> findByDriverIdAndJob_CreatedAtContainsAndJob_Status(String driverId, String date,Integer status);
 }

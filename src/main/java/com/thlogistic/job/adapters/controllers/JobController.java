@@ -24,6 +24,7 @@ public class JobController extends BaseController implements JobResource {
     private final GetHistoryJobUseCase getHistoryJobUseCase;
     private final GetStatisticByProductUseCase getStatisticByProductUseCase;
     private final GetStatisticByRouteUseCase getStatisticByRouteUseCase;
+    private final GetStatisticByDriverUseCase getStatisticByDriverUseCase;
 
     @Override
     public ResponseEntity<Object> getJob(String token, String id) {
@@ -130,6 +131,17 @@ public class JobController extends BaseController implements JobResource {
                 new BaseTokenRequest<>(
                         token,
                         routeId
+                )
+        );
+        return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> getStatisticByDriver(String token, String driverId) {
+        GetJobStatisticResponse<GetJobListResponse> result = getStatisticByDriverUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        driverId
                 )
         );
         return successResponse(result, null);

@@ -44,29 +44,7 @@ public class DriverJobRepositoryImpl implements DriverJobRepository {
     }
 
     @Override
-    public BasePagingQueryResult<List<DriverJobEntity>> paging(String keyword, Integer page, Integer size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<JobEntity> jobs;
-//        if (keyword == null || keyword.isEmpty()) {
-//            jobs = repository.findAll(pageable);
-//        } else {
-//            jobs = repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(keyword, keyword, pageable);
-//        }
-//
-//        BasePagingQueryResult<List<JobEntity>> result = new BasePagingQueryResult<>();
-//        result.data = jobs.getContent();
-//        result.total = jobs.getTotalElements();
-//        result.totalPage = jobs.getTotalPages();
-//        return result;
-        return null;
-    }
-
-    @Override
-    public List<DriverJobEntity> findByKeyword(String keyword) {
-//        if (keyword == null || keyword.isEmpty()) {
-//            throw new RuntimeException("Invalid keyword");
-//        }
-//        return repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(keyword, keyword);
-        return null;
+    public List<DriverJobEntity> findByDriverId(String driverId) {
+        return repository.findByDriverId(driverId);
     }
 }

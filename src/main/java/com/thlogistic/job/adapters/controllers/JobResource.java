@@ -39,4 +39,7 @@ interface JobResource {
 
     @GetMapping("/statistic/route/{routeId}")
     ResponseEntity<Object> getStatisticByRoute(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String routeId);
+
+    @GetMapping("/statistic/driver/{driverId}")
+    ResponseEntity<Object> getStatisticByDriver(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
 }
