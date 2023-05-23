@@ -32,7 +32,6 @@ public class GetStatisticByDriverUseCaseImpl implements GetStatisticByDriverUseC
     private final JobProductRepository jobProductRepository;
     private final RouteClient routeClient;
     private final ProductClient productClient;
-    private final TransportationClient transportationClient;
 
     @Override
     public GetJobStatisticResponse<GetJobListResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
@@ -68,7 +67,6 @@ public class GetStatisticByDriverUseCaseImpl implements GetStatisticByDriverUseC
             GetJobListResponse.GetJobListResponseBuilder responseBuilder = GetJobListResponse.builder();
             getJobInfo(responseBuilder, jobEntity);
             getProductInfo(responseBuilder, jobEntity, token);
-            getTransportationInfo(responseBuilder, jobEntity, token);
             getRouteInfo(responseBuilder, jobEntity, token);
             jobPagingDto.add(responseBuilder.build());
         }
@@ -109,35 +107,6 @@ public class GetStatisticByDriverUseCaseImpl implements GetStatisticByDriverUseC
 
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());
-    }
-
-    private void getTransportationInfo(
-            GetJobListResponse.GetJobListResponseBuilder builder,
-            JobEntity jobEntity,
-            String authToken
-    ) {
-        if (jobEntity.getStatus() >= JobStatus.ASSIGNED.statusCode) {
-            List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
-                    jobEntity.getJobId()
-            );
-            if (driverJobEntities.isEmpty()) {
-                throw new CustomRuntimeException("An error occurred when loading driver");
-            }
-            DriverJobEntity driverJobEntity = driverJobEntities.get(0);
-
-            String driverId = driverJobEntity.getDriverId();
-            try {
-                BaseResponse<GetTransportationDto> getTransportationResponse =
-                        transportationClient.getTransportationByDriverId(authToken, driverId);
-                builder.licensePlate(getTransportationResponse.getData().getLicensePlate());
-                builder.driverInCharge(getTransportationResponse.getData().getMainDriver().getName());
-            } catch (Exception e) {
-                throw new CustomRuntimeException("An error occurred when loading transportation");
-            }
-        } else {
-            builder.licensePlate(Const.Job.NOT_ASSIGNED);
-            builder.driverInCharge(Const.Job.NOT_ASSIGNED);
-        }
     }
 
     private void getRouteInfo(

@@ -116,7 +116,7 @@ public class JobController extends BaseController implements JobResource {
 
     @Override
     public ResponseEntity<Object> getStatisticByProduct(String token, String productId) {
-        GetJobStatisticResponse<GetJobListNoProductResponse> result = getStatisticByProductUseCase.execute(
+        GetJobStatisticResponse<GetJobListResponse> result = getStatisticByProductUseCase.execute(
                 new BaseTokenRequest<>(
                         token,
                         productId
@@ -127,7 +127,7 @@ public class JobController extends BaseController implements JobResource {
 
     @Override
     public ResponseEntity<Object> getStatisticByRoute(String token, String routeId) {
-        GetJobStatisticResponse<GetJobListNoRouteResponse> result = getStatisticByRouteUseCase.execute(
+        GetJobStatisticResponse<GetJobListResponse> result = getStatisticByRouteUseCase.execute(
                 new BaseTokenRequest<>(
                         token,
                         routeId

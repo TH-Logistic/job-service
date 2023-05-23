@@ -1,9 +1,6 @@
 package com.thlogistic.job.core.usecases;
 
-import com.thlogistic.job.adapters.dtos.BaseResponse;
-import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
-import com.thlogistic.job.adapters.dtos.GetJobListNoProductResponse;
-import com.thlogistic.job.adapters.dtos.GetJobPagingResponse;
+import com.thlogistic.job.adapters.dtos.*;
 import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
 import com.thlogistic.job.adapters.dtos.statistic.JobStatisticDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
@@ -40,7 +37,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
     private final TransportationClient transportationClient;
 
     @Override
-    public GetJobStatisticResponse<GetJobListNoProductResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
+    public GetJobStatisticResponse<GetJobListResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
         String token = baseTokenRequest.getToken();
         String productId = baseTokenRequest.getRequestContent();
 
@@ -52,8 +49,8 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
         Set<JobEntity> jobEntities = new HashSet<>();
 
         // Response
-        GetJobStatisticResponse<GetJobListNoProductResponse> response = new GetJobStatisticResponse<>();
-        List<GetJobListNoProductResponse> jobPagingDto = new LinkedList<>();
+        GetJobStatisticResponse<GetJobListResponse> response = new GetJobStatisticResponse<>();
+        List<GetJobListResponse> jobPagingDto = new LinkedList<>();
         JobStatisticDto jobStatisticDto = new JobStatisticDto();
 
         for (JobProductEntity jobProductEntity : jobProductEntityList) {
@@ -67,7 +64,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
                 totalTripBasedJob++;
             }
 
-            GetJobListNoProductResponse.GetJobListNoProductResponseBuilder responseBuilder = GetJobListNoProductResponse.builder();
+            GetJobListResponse.GetJobListResponseBuilder responseBuilder = GetJobListResponse.builder();
             getJobInfo(responseBuilder, jobEntity);
             getTransportationInfo(responseBuilder, jobEntity, token);
             getRouteInfo(responseBuilder, jobEntity, token);
@@ -88,7 +85,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
     }
 
     private void getJobInfo(
-            GetJobListNoProductResponse.GetJobListNoProductResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
@@ -113,7 +110,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
     }
 
     private void getTransportationInfo(
-            GetJobListNoProductResponse.GetJobListNoProductResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {
@@ -142,7 +139,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
     }
 
     private void getRouteInfo(
-            GetJobListNoProductResponse.GetJobListNoProductResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {

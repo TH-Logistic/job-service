@@ -2,7 +2,7 @@ package com.thlogistic.job.core.usecases;
 
 import com.thlogistic.job.adapters.dtos.BaseResponse;
 import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
-import com.thlogistic.job.adapters.dtos.GetJobListNoRouteResponse;
+import com.thlogistic.job.adapters.dtos.GetJobListResponse;
 import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
 import com.thlogistic.job.adapters.dtos.statistic.JobStatisticDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
@@ -35,7 +35,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
     private final ProductClient productClient;
 
     @Override
-    public GetJobStatisticResponse<GetJobListNoRouteResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
+    public GetJobStatisticResponse<GetJobListResponse> execute(BaseTokenRequest<String> baseTokenRequest) {
         String token = baseTokenRequest.getToken();
         String routeId = baseTokenRequest.getRequestContent();
 
@@ -46,8 +46,8 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
         Integer totalTripBasedJob = 0;
 
         // Response
-        GetJobStatisticResponse<GetJobListNoRouteResponse> response = new GetJobStatisticResponse<>();
-        List<GetJobListNoRouteResponse> jobPagingDto = new LinkedList<>();
+        GetJobStatisticResponse<GetJobListResponse> response = new GetJobStatisticResponse<>();
+        List<GetJobListResponse> jobPagingDto = new LinkedList<>();
         JobStatisticDto jobStatisticDto = new JobStatisticDto();
 
         for (JobEntity jobEntity : jobEntityList) {
@@ -57,11 +57,11 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
                 totalTripBasedJob++;
             }
 
-            for (JobProductEntity jobProductEntity: jobEntity.getJobProductList()) {
+            for (JobProductEntity jobProductEntity : jobEntity.getJobProductList()) {
                 totalWeight += jobProductEntity.getWeight();
             }
 
-            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder responseBuilder = GetJobListNoRouteResponse.builder();
+            GetJobListResponse.GetJobListResponseBuilder responseBuilder = GetJobListResponse.builder();
             getJobInfo(responseBuilder, jobEntity);
             getProductInfo(responseBuilder, jobEntity, token);
             getTransportationInfo(responseBuilder, jobEntity, token);
@@ -82,7 +82,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
     }
 
     private void getJobInfo(
-            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
@@ -92,7 +92,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
     }
 
     private void getTransportationInfo(
-            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {
@@ -121,7 +121,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
     }
 
     private void getProductInfo(
-            GetJobListNoRouteResponse.GetJobListNoRouteResponseBuilder builder,
+            GetJobListResponse.GetJobListResponseBuilder builder,
             JobEntity jobEntity,
             String authToken
     ) {
