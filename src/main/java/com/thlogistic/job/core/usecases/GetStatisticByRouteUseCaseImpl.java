@@ -18,6 +18,7 @@ import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.entities.JobProductEntity;
 import com.thlogistic.job.utils.Const;
+import com.thlogistic.job.utils.DateTimeHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +87,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
-        builder.createdAt(jobEntity.getCreatedAt());
+        builder.createdAt(DateTimeHelper.getFormattedTimeFromEpoch(jobEntity.getCreatedAt()));
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());
     }

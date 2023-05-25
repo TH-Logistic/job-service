@@ -1,18 +1,13 @@
 package com.thlogistic.job.core.usecases;
 
 import com.thlogistic.job.adapters.dtos.AddEndingGarageRequest;
-import com.thlogistic.job.adapters.dtos.AddTransportationRequest;
 import com.thlogistic.job.adapters.dtos.BaseResponse;
 import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
-import com.thlogistic.job.aop.exception.BadRequestException;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
 import com.thlogistic.job.client.transportation.GetGarageDto;
-import com.thlogistic.job.client.transportation.GetTransportationDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.entities.JobStatus;
-import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobRepository;
-import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.utils.DateTimeHelper;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +51,7 @@ public class AddEndingGarageUseCaseImpl implements AddEndingGarageUseCase {
 
     private void updateJobEntity(JobEntity jobEntity, String endingGarageId) {
         jobEntity.setStatus(JobStatus.ASSIGNED.statusCode);
-        jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeFormatted());
+        jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeInEpoch());
         jobEntity.setEndingGarageId(endingGarageId);
 
         jobRepository.save(jobEntity);

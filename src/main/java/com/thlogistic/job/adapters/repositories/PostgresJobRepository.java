@@ -28,4 +28,6 @@ public interface PostgresJobRepository extends JpaRepository<JobEntity, String> 
     );
 
     List<JobEntity> findAllByRouteId(String routeId);
+
+    List<JobEntity> findTop10ByOrderByCreatedAtDesc();
 }

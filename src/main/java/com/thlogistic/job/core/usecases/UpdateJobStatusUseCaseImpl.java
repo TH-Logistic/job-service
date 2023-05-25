@@ -52,7 +52,7 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                 }
 
                 jobEntity.setStatus(JobStatus.JOB_STARTED.statusCode);
-                jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeInEpoch());
                 if (requestContent.getHealthcheck() == null ||
                         !Objects.equals(requestContent.getHealthcheck().getJobId(), jobEntity.getJobId())
                 ) {
@@ -70,35 +70,35 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                     throw new BadRequestException("Invalid job status");
                 }
                 jobEntity.setStatus(JobStatus.PICK_UP_ARRIVE.statusCode);
-                jobEntity.setPickUpArriveAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setPickUpArriveAt(DateTimeHelper.getCurrentTimeInEpoch());
             }
             case PICK_UP_DONE -> {
                 if (!currentJobStatusCode.equals(JobStatus.PICK_UP_ARRIVE.statusCode)) {
                     throw new BadRequestException("Invalid job status");
                 }
                 jobEntity.setStatus(JobStatus.PICK_UP_DONE.statusCode);
-                jobEntity.setPickUpDoneAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setPickUpDoneAt(DateTimeHelper.getCurrentTimeInEpoch());
             }
             case DELIVERY_ARRIVE -> {
                 if (!currentJobStatusCode.equals(JobStatus.PICK_UP_DONE.statusCode)) {
                     throw new BadRequestException("Invalid job status");
                 }
                 jobEntity.setStatus(JobStatus.DELIVERY_ARRIVE.statusCode);
-                jobEntity.setDeliveryArriveAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setDeliveryArriveAt(DateTimeHelper.getCurrentTimeInEpoch());
             }
             case DISCHARGED -> {
                 if (!currentJobStatusCode.equals(JobStatus.DELIVERY_ARRIVE.statusCode)) {
                     throw new BadRequestException("Invalid job status");
                 }
                 jobEntity.setStatus(JobStatus.DISCHARGED.statusCode);
-                jobEntity.setDischargedAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setDischargedAt(DateTimeHelper.getCurrentTimeInEpoch());
             }
             case COMPLETED -> {
                 if (!currentJobStatusCode.equals(JobStatus.DISCHARGED.statusCode)) {
                     throw new BadRequestException("Invalid job status");
                 }
                 jobEntity.setStatus(JobStatus.COMPLETED.statusCode);
-                jobEntity.setCompletedAt(DateTimeHelper.getCurrentTimeFormatted());
+                jobEntity.setCompletedAt(DateTimeHelper.getCurrentTimeInEpoch());
             }
             default -> {
                 throw new BadRequestException("An error occurred when updating job status");

@@ -66,7 +66,7 @@ public class AddTransportationUseCaseImpl implements AddTransportationUseCase {
 
     private void updateJobEntity(JobEntity jobEntity, String startingGarageId) {
         jobEntity.setStatus(JobStatus.ASSIGNED.statusCode);
-        jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeFormatted());
+        jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeInEpoch());
         jobEntity.setStartingGarageId(startingGarageId);
 
         jobRepository.save(jobEntity);

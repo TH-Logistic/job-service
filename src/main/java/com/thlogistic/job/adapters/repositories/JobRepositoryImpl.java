@@ -67,4 +67,9 @@ public class JobRepositoryImpl implements JobRepository {
     public List<JobEntity> findByRouteId(String routeId) {
         return repository.findAllByRouteId(routeId);
     }
+
+    @Override
+    public List<JobEntity> findLastedJob() {
+        return repository.findTop10ByOrderByCreatedAtDesc();
+    }
 }

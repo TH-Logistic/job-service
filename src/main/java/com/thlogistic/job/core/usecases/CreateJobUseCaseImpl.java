@@ -70,7 +70,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
                 .totalPrice(jobPrice)
                 .isTonBased(isTonBasedJob)
                 .mustDeliverAt(requestContent.getDeliveryTime())
-                .createdAt(DateTimeHelper.getCurrentTimeFormatted())
+                .createdAt(DateTimeHelper.getCurrentTimeInEpoch())
                 .pickUpContactName(requestContent.getPickUpContactName())
                 .pickUpContactNo(requestContent.getPickUpContactNo())
                 .unloadContactName(requestContent.getUnloadContactName())
@@ -113,9 +113,9 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         }
     }
 
-    private void checkIfDeliveryTimeIsValid(String time) {
+    private void checkIfDeliveryTimeIsValid(Long time) {
         if (!DateTimeHelper.checkDateTimeFormat(time)) {
-            throw new InvalidDateTimeFormatException("Invalid datetime format");
+            throw new InvalidDateTimeFormatException("Invalid datetime");
         }
     }
 

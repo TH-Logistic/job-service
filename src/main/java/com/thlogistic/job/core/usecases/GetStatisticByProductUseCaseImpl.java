@@ -19,6 +19,7 @@ import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.entities.JobProductEntity;
 import com.thlogistic.job.utils.Const;
+import com.thlogistic.job.utils.DateTimeHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -89,20 +90,20 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
-        builder.createdAt(jobEntity.getCreatedAt());
+        builder.createdAt(DateTimeHelper.getFormattedTimeFromEpoch(jobEntity.getCreatedAt()));
 
-        String pickUpAt = jobEntity.getPickUpDoneAt();
-        if (pickUpAt == null || pickUpAt.isEmpty()) {
+        Long pickUpAt = jobEntity.getPickUpDoneAt();
+        if (pickUpAt == null) {
             builder.pickUpAt(Const.Job.NOT_YET);
         } else {
-            builder.pickUpAt(pickUpAt);
+            builder.pickUpAt(DateTimeHelper.getFormattedTimeFromEpoch(pickUpAt));
         }
 
-        String unloadAt = jobEntity.getDischargedAt();
-        if (unloadAt == null || unloadAt.isEmpty()) {
+        Long unloadAt = jobEntity.getDischargedAt();
+        if (unloadAt == null) {
             builder.unloadAt(Const.Job.NOT_YET);
         } else {
-            builder.unloadAt(unloadAt);
+            builder.unloadAt(DateTimeHelper.getFormattedTimeFromEpoch(unloadAt));
         }
 
         builder.orderFee(jobEntity.getTotalPrice());

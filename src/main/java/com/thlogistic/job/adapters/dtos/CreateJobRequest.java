@@ -17,7 +17,7 @@ public class CreateJobRequest {
     @NotEmpty(message = "Invalid route ID")
     String routeId;
     @NotEmpty(message = "Invalid delivery time")
-    String deliveryTime;
+    Long deliveryTime;
     @NotEmpty(message = "Invalid pick up contact name")
     String pickUpContactName;
     @NotEmpty(message = "Invalid pick up contact no")
