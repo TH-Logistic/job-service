@@ -2,6 +2,10 @@ package com.thlogistic.job.adapters.repositories;
 
 import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.JobEntity;
+import com.thlogistic.job.utils.DateTimeHelper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JobRepositoryImpl implements JobRepository {
     private final PostgresJobRepository repository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public String insert(JobEntity job) {
@@ -71,5 +77,18 @@ public class JobRepositoryImpl implements JobRepository {
     @Override
     public List<JobEntity> findLastedJob() {
         return repository.findTop10ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public List<JobEntity> findAllJobInYear(Integer year) {
+        Long startTimestamp = DateTimeHelper.getStartOfYearTimestamp(year);
+        Long endTimestamp = DateTimeHelper.getEndOfYearTimestamp(year);
+
+        String jpql = "SELECT j FROM job j WHERE j.createdAt >= :startTimestamp AND j.createdAt <= :endTimestamp";
+
+        TypedQuery<JobEntity> query = entityManager.createQuery(jpql, JobEntity.class);
+        query.setParameter("startTimestamp", startTimestamp);
+        query.setParameter("endTimestamp", endTimestamp);
+        return query.getResultList();
     }
 }

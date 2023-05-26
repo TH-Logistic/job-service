@@ -19,11 +19,20 @@ public class DateTimeHelper {
     }
 
     public static String getFormattedTimeFromEpoch(Long epoch) {
-
         Instant instant = Instant.ofEpochMilli(epoch);
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("GMT+7"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Const.DateTimeFormat.DATE_TIME_FORMAT);
         return dateTime.format(formatter);
+    }
+
+    public static Long getStartOfYearTimestamp(Integer year) {
+        LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0, 0);
+        return startOfYear.atZone(ZoneId.of("GMT+7")).toInstant().toEpochMilli();
+    }
+
+    public static Long getEndOfYearTimestamp(Integer year) {
+        LocalDateTime endOfYear = LocalDateTime.of(year, 12, 31, 23, 59, 59);
+        return endOfYear.atZone(ZoneId.of("GMT+7")).toInstant().toEpochMilli();
     }
 
 }

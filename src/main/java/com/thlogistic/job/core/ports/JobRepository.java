@@ -23,4 +23,6 @@ public interface JobRepository {
 
     List<JobEntity> findByRouteId(String routeId);
     List<JobEntity> findLastedJob();
+
+    List<JobEntity> findAllJobInYear(Integer year);
 }
