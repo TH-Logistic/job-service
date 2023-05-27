@@ -8,6 +8,8 @@ import com.thlogistic.job.adapters.dtos.dashboard.GetLineChartItemDto;
 import com.thlogistic.job.adapters.dtos.dashboard.GetPieChartDto;
 import com.thlogistic.job.adapters.dtos.dashboard.GetRecentJobDashboardDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
+import com.thlogistic.job.client.billing.BillingClient;
+import com.thlogistic.job.client.billing.GetBillingStatisticResponse;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.product.ProductClient;
 import com.thlogistic.job.core.ports.JobProductRepository;
@@ -30,6 +32,7 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
     private final JobRepository jobRepository;
     private final JobProductRepository jobProductRepository;
     private final ProductClient productClient;
+    private final BillingClient billingClient;
 
     @Override
     public GetDashboardResponse execute(BaseTokenRequest<GetDashboardRequest> baseTokenRequest) {
@@ -45,6 +48,7 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
         response.setPieChart(calculateJobPriceByType(allJobs));
         response.setRecentJobs(getRecentJobsResponse(recentJobEntities, token));
         response.setLineChart(calculateJobPriceInMonths(jobsByYearEntities));
+        response.setBilling(getBillingStatistic(token));
 
         return response;
     }
@@ -114,6 +118,17 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
             return response.getData().stream().map(GetProductDto::getName).toList();
         } catch (Exception e) {
             throw new CustomRuntimeException("An error occurred when loading products");
+        }
+    }
+
+    private GetBillingStatisticResponse getBillingStatistic(String authToken) {
+        try {
+            BaseResponse<GetBillingStatisticResponse> response = billingClient.getStatisticForDashboard(
+                    authToken
+            );
+            return response.getData();
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading billings");
         }
     }
 }

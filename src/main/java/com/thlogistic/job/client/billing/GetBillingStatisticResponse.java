@@ -15,5 +15,4 @@ import java.util.List;
 public class GetBillingStatisticResponse {
     BillingStatisticOverviewDto profit;
     BillingStatisticOverviewDto debt;
-    List<GetBillingDto> billings;
 }
