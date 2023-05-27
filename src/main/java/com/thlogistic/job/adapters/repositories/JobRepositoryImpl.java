@@ -75,6 +75,11 @@ public class JobRepositoryImpl implements JobRepository {
     }
 
     @Override
+    public List<JobEntity> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
     public List<JobEntity> findLastedJob() {
         return repository.findTop10ByOrderByCreatedAtDesc();
     }

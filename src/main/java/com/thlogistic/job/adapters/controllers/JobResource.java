@@ -16,6 +16,9 @@ interface JobResource {
     @GetMapping("/list")
     ResponseEntity<Object> listJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid ListJobPagingRequest request);
 
+    @GetMapping("/dashboard")
+    ResponseEntity<Object> dashboard(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid GetDashboardRequest request);
+
     @PostMapping
     ResponseEntity<Object> createJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody CreateJobRequest request);
 

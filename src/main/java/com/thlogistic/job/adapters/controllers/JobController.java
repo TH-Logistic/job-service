@@ -1,6 +1,7 @@
 package com.thlogistic.job.adapters.controllers;
 
 import com.thlogistic.job.adapters.dtos.*;
+import com.thlogistic.job.adapters.dtos.dashboard.GetDashboardResponse;
 import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
 import com.thlogistic.job.core.usecases.*;
 import kotlin.Pair;
@@ -15,6 +16,7 @@ import java.util.List;
 public class JobController extends BaseController implements JobResource {
 
     private final CreateJobUseCase createJobUseCase;
+    private final GetDashboardUseCase getDashboardUseCase;
     private final GetJobUseCase getJobUseCase;
     private final GetJobPagingUseCase getJobPagingUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
@@ -40,6 +42,17 @@ public class JobController extends BaseController implements JobResource {
     @Override
     public ResponseEntity<Object> listJob(String token, ListJobPagingRequest request) {
         BasePagingResponse<GetJobPagingResponse> result = getJobPagingUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        request
+                )
+        );
+        return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> dashboard(String token, GetDashboardRequest request) {
+        GetDashboardResponse result = getDashboardUseCase.execute(
                 new BaseTokenRequest<>(
                         token,
                         request

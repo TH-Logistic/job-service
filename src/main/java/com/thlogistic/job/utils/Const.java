@@ -3,6 +3,7 @@ package com.thlogistic.job.utils;
 public class Const {
     public static class DateTimeFormat {
         public static final String DATE_TIME_FORMAT = "HH:mm dd/MM/yyyy";
+        public static final String MONTH_ONLY_FORMAT = "MMM";
     }
 
     public static class Job {

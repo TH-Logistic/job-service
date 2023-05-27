@@ -1,6 +1,8 @@
 package com.thlogistic.job.adapters.dtos;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +18,8 @@ public class CreateJobRequest {
     List<ProductCreateJobRequest> productList;
     @NotEmpty(message = "Invalid route ID")
     String routeId;
-    @NotEmpty(message = "Invalid delivery time")
+    @NotNull(message = "Invalid delivery time")
+    @Min(value = 0, message = "Invalid delivery time")
     Long deliveryTime;
     @NotEmpty(message = "Invalid pick up contact name")
     String pickUpContactName;

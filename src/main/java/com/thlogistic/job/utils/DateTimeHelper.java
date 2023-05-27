@@ -25,6 +25,13 @@ public class DateTimeHelper {
         return dateTime.format(formatter);
     }
 
+    public static String getMonthOnlyFromEpoch(Long epoch) {
+        Instant instant = Instant.ofEpochMilli(epoch);
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("GMT+7"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Const.DateTimeFormat.MONTH_ONLY_FORMAT);
+        return dateTime.format(formatter);
+    }
+
     public static Long getStartOfYearTimestamp(Integer year) {
         LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0, 0);
         return startOfYear.atZone(ZoneId.of("GMT+7")).toInstant().toEpochMilli();
