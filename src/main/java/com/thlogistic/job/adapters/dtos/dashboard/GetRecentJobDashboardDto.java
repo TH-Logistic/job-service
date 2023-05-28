@@ -15,5 +15,5 @@ public class GetRecentJobDashboardDto {
     String id;
     List<String> products;
     Integer status;
-    String createdAt;
+    Long createdAt;
 }

@@ -16,7 +16,7 @@ public class GetJobPagingResponse {
     String licensePlate;
     String driverInCharge;
     List<String> products;
-    String createdAt;
+    Long createdAt;
     String pickUpAt;
     String unloadAt;
     Double orderFee;

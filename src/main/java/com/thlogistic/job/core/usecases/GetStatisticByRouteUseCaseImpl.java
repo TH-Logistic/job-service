@@ -87,7 +87,7 @@ public class GetStatisticByRouteUseCaseImpl implements GetStatisticByRouteUseCas
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
-        builder.createdAt(DateTimeHelper.getFormattedTimeFromEpoch(jobEntity.getCreatedAt()));
+        builder.createdAt(jobEntity.getCreatedAt());
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());
     }

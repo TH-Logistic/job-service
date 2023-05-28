@@ -73,21 +73,9 @@ public class GetJobPagingUseCaseImpl implements GetJobPagingUseCase {
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
-        builder.createdAt(DateTimeHelper.getFormattedTimeFromEpoch(jobEntity.getCreatedAt()));
+        builder.createdAt(jobEntity.getCreatedAt());
 
         Long pickUpAt = jobEntity.getPickUpDoneAt();
-        if (pickUpAt == null) {
-            builder.pickUpAt(Const.Job.NOT_YET);
-        } else {
-            builder.pickUpAt(DateTimeHelper.getFormattedTimeFromEpoch(pickUpAt));
-        }
-
-        Long unloadAt = jobEntity.getDischargedAt();
-        if (unloadAt == null) {
-            builder.unloadAt(Const.Job.NOT_YET);
-        } else {
-            builder.unloadAt(DateTimeHelper.getFormattedTimeFromEpoch(unloadAt));
-        }
 
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());

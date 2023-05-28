@@ -74,7 +74,7 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
                             entity.getJobId(),
                             getProductInfo(entity, authToken),
                             entity.getStatus(),
-                            DateTimeHelper.getFormattedTimeFromEpoch(entity.getCreatedAt())
+                            entity.getCreatedAt()
                     )
             );
         });

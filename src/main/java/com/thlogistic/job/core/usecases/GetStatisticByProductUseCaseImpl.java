@@ -1,12 +1,11 @@
 package com.thlogistic.job.core.usecases;
 
-import com.thlogistic.job.adapters.dtos.*;
+import com.thlogistic.job.adapters.dtos.BaseResponse;
+import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
+import com.thlogistic.job.adapters.dtos.GetJobListResponse;
 import com.thlogistic.job.adapters.dtos.statistic.GetJobStatisticResponse;
 import com.thlogistic.job.adapters.dtos.statistic.JobStatisticDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
-import com.thlogistic.job.client.healthcheck.HealthcheckClient;
-import com.thlogistic.job.client.product.GetProductDto;
-import com.thlogistic.job.client.product.ProductClient;
 import com.thlogistic.job.client.route.GetRouteDto;
 import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.GetTransportationDto;
@@ -14,7 +13,6 @@ import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.entities.JobStatus;
 import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobProductRepository;
-import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.entities.JobProductEntity;
@@ -90,21 +88,7 @@ public class GetStatisticByProductUseCaseImpl implements GetStatisticByProductUs
             JobEntity jobEntity
     ) {
         builder.id(jobEntity.getJobId());
-        builder.createdAt(DateTimeHelper.getFormattedTimeFromEpoch(jobEntity.getCreatedAt()));
-
-        Long pickUpAt = jobEntity.getPickUpDoneAt();
-        if (pickUpAt == null) {
-            builder.pickUpAt(Const.Job.NOT_YET);
-        } else {
-            builder.pickUpAt(DateTimeHelper.getFormattedTimeFromEpoch(pickUpAt));
-        }
-
-        Long unloadAt = jobEntity.getDischargedAt();
-        if (unloadAt == null) {
-            builder.unloadAt(Const.Job.NOT_YET);
-        } else {
-            builder.unloadAt(DateTimeHelper.getFormattedTimeFromEpoch(unloadAt));
-        }
+        builder.createdAt(jobEntity.getCreatedAt());
 
         builder.orderFee(jobEntity.getTotalPrice());
         builder.status(jobEntity.getStatus());
