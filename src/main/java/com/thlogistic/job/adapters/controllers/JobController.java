@@ -18,6 +18,7 @@ public class JobController extends BaseController implements JobResource {
     private final CreateJobUseCase createJobUseCase;
     private final GetDashboardUseCase getDashboardUseCase;
     private final GetJobUseCase getJobUseCase;
+    private final GetJobIfExistUseCase getJobIfExistUseCase;
     private final GetJobPagingUseCase getJobPagingUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
     private final AddEndingGarageUseCase addEndingGarageUseCase;
@@ -45,6 +46,17 @@ public class JobController extends BaseController implements JobResource {
                 new BaseTokenRequest<>(
                         token,
                         request
+                )
+        );
+        return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> checkIfJobExist(String token, String id) {
+        GetJobIfExistResponse result = getJobIfExistUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        id
                 )
         );
         return successResponse(result, null);

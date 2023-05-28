@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class UpdateJobStatusRequest {
     @NotNull(message = "Invalid job status")
     Integer jobStatus;
-    CreateHealthcheckClientRequest healthcheck;
+    CreateHealthcheckRequest healthcheck;
 }

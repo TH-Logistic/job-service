@@ -16,6 +16,9 @@ interface JobResource {
     @GetMapping("/list")
     ResponseEntity<Object> listJob(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid ListJobPagingRequest request);
 
+    @GetMapping("/{id}/exists")
+    ResponseEntity<Object> checkIfJobExist(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id);
+
     @GetMapping("/dashboard")
     ResponseEntity<Object> dashboard(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid GetDashboardRequest request);
 

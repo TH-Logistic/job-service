@@ -4,6 +4,7 @@ import com.thlogistic.job.adapters.dtos.*;
 import com.thlogistic.job.aop.exception.BadRequestException;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
+import com.thlogistic.job.client.healthcheck.CreateHealthcheckClientRequest;
 import com.thlogistic.job.client.healthcheck.HealthcheckClient;
 import com.thlogistic.job.core.entities.JobStatus;
 import com.thlogistic.job.core.ports.JobRepository;
@@ -54,12 +55,23 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                 jobEntity.setStatus(JobStatus.JOB_STARTED.statusCode);
                 jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeInEpoch());
                 if (requestContent.getHealthcheck() == null ||
-                        !Objects.equals(requestContent.getHealthcheck().getJobId(), jobEntity.getJobId())
+                        !Objects.equals(jobId, jobEntity.getJobId())
                 ) {
                     throw new BadRequestException("Invalid healthcheck");
                 } else {
                     try {
-                        healthcheckClient.createHealthcheck(token, requestContent.getHealthcheck());
+                        CreateHealthcheckRequest healthcheck = requestContent.getHealthcheck();
+                        CreateHealthcheckClientRequest clientRequestBody = new CreateHealthcheckClientRequest(
+                                jobId,
+                                healthcheck.getIsTiresOk(),
+                                healthcheck.getIsLightOk(),
+                                healthcheck.getIsBrakeOk(),
+                                healthcheck.getIsFluidLevelOk(),
+                                healthcheck.getIsBatteryOk(),
+                                healthcheck.getIsWiperOk(),
+                                healthcheck.getNote()
+                        );
+                        healthcheckClient.createHealthcheck(token, clientRequestBody);
                     } catch (Exception e) {
                         throw new CustomRuntimeException("An error occurred when update healthcheck");
                     }
