@@ -6,7 +6,11 @@ import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
 import com.thlogistic.job.client.healthcheck.CreateHealthcheckClientRequest;
 import com.thlogistic.job.client.healthcheck.HealthcheckClient;
+import com.thlogistic.job.client.transportation.GetTransportationDto;
+import com.thlogistic.job.client.transportation.TransportationClient;
+import com.thlogistic.job.client.transportation.UpdateTransportationDeliveryStatusRequest;
 import com.thlogistic.job.core.entities.JobStatus;
+import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.utils.DateTimeHelper;
@@ -21,7 +25,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
     private final JobRepository jobRepository;
+    private final DriverJobRepository driverJobRepository;
     private final HealthcheckClient healthcheckClient;
+    private final TransportationClient transportationClient;
 
     @Override
     public Boolean execute(BaseTokenRequest<Pair<String, UpdateJobStatusRequest>> baseTokenRequest) {
@@ -52,8 +58,6 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                     throw new BadRequestException("Cannot start job without ending garage");
                 }
 
-                jobEntity.setStatus(JobStatus.JOB_STARTED.statusCode);
-                jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeInEpoch());
                 if (requestContent.getHealthcheck() == null ||
                         !Objects.equals(jobId, jobEntity.getJobId())
                 ) {
@@ -75,6 +79,16 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                     } catch (Exception e) {
                         throw new CustomRuntimeException("An error occurred when update healthcheck");
                     }
+
+                    String driverId = driverJobRepository.findByJobId(jobId).get(0).getDriverId();
+                    String transportationId = getTransportationId(token, driverId);
+
+                    UpdateTransportationDeliveryStatusRequest body =
+                            new UpdateTransportationDeliveryStatusRequest(2, null);
+                    updateTransportationStatus(token, transportationId, body);
+
+                    jobEntity.setStatus(JobStatus.JOB_STARTED.statusCode);
+                    jobEntity.setStartedAt(DateTimeHelper.getCurrentTimeInEpoch());
                 }
             }
             case PICK_UP_ARRIVE -> {
@@ -111,6 +125,13 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
                 }
                 jobEntity.setStatus(JobStatus.COMPLETED.statusCode);
                 jobEntity.setCompletedAt(DateTimeHelper.getCurrentTimeInEpoch());
+
+                String driverId = driverJobRepository.findByJobId(jobId).get(0).getDriverId();
+                String transportationId = getTransportationId(token, driverId);
+
+                UpdateTransportationDeliveryStatusRequest body =
+                        new UpdateTransportationDeliveryStatusRequest(1, jobEntity.getEndingGarageId());
+                updateTransportationStatus(token, transportationId, body);
             }
             default -> {
                 throw new BadRequestException("An error occurred when updating job status");
@@ -118,5 +139,25 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
         }
         jobRepository.save(jobEntity);
         return true;
+    }
+
+    private String getTransportationId(String authToken, String driverId) {
+        try {
+            BaseResponse<GetTransportationDto> getTransportationResponse =
+                    transportationClient.getTransportationByDriverId(authToken, driverId);
+            return getTransportationResponse.getData().getId();
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading transportation");
+        }
+    }
+
+    private void updateTransportationStatus(String authToken, String transportationId, UpdateTransportationDeliveryStatusRequest body) {
+        try {
+            System.out.println("justin transportationId: " + transportationId);
+            transportationClient.updateDeliveryStatus(authToken, transportationId, body);
+        } catch (Exception e) {
+            System.out.println("justin: " + e.getMessage());
+            throw new CustomRuntimeException("An error occurred when update transportation status");
+        }
     }
 }

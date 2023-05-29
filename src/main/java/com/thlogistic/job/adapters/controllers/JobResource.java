@@ -19,6 +19,9 @@ interface JobResource {
     @GetMapping("/{id}/exists")
     ResponseEntity<Object> checkIfJobExist(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id);
 
+    @GetMapping("/number-of-trips/{driverId}")
+    ResponseEntity<Object> getNumberOfTripsOfDriver(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String driverId);
+
     @GetMapping("/dashboard")
     ResponseEntity<Object> dashboard(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid GetDashboardRequest request);
 

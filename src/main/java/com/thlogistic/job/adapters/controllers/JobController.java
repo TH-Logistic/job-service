@@ -18,6 +18,7 @@ public class JobController extends BaseController implements JobResource {
     private final CreateJobUseCase createJobUseCase;
     private final GetDashboardUseCase getDashboardUseCase;
     private final GetJobUseCase getJobUseCase;
+    private final GetNumberOfTripsOfDriverUseCase getNumberOfTripsOfDriverUseCase;
     private final GetJobIfExistUseCase getJobIfExistUseCase;
     private final GetJobPagingUseCase getJobPagingUseCase;
     private final AddTransportationUseCase addTransportationUseCase;
@@ -57,6 +58,17 @@ public class JobController extends BaseController implements JobResource {
                 new BaseTokenRequest<>(
                         token,
                         id
+                )
+        );
+        return successResponse(result, null);
+    }
+
+    @Override
+    public ResponseEntity<Object> getNumberOfTripsOfDriver(String token, String driverId) {
+        Integer result = getNumberOfTripsOfDriverUseCase.execute(
+                new BaseTokenRequest<>(
+                        token,
+                        driverId
                 )
         );
         return successResponse(result, null);

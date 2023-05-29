@@ -7,12 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetDriverInfoDto {
-    String id;
-    String avatarUrl;
-    String name;
-    String gender;
-    String phoneNumber;
-    String dateOfBirth;
-    Integer numberOfTrips;
+public class UpdateTransportationDeliveryStatusRequest {
+    Integer deliveryStatus;
+    String garageId;
 }

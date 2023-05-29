@@ -5,6 +5,7 @@ import com.thlogistic.job.client.route.GetRouteDto;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface TransportationClient {
     @RequestLine("GET /api/v1/transportation/{id}")
@@ -27,4 +28,11 @@ public interface TransportationClient {
             "Authorization: {token}"
     })
     BaseResponse<GetGarageDto> getGarage(@Param("token") String token, @Param("id") String id);
+
+    @RequestLine("PUT /api/v1/transportation/update-delivery-status/{transportationId}")
+    @Headers({
+            "Content-Type: application/json",
+            "Authorization: {token}"
+    })
+    BaseResponse<Boolean> updateDeliveryStatus(@Param("token") String token, @Param("transportationId") String transportationId, @RequestBody UpdateTransportationDeliveryStatusRequest body);
 }

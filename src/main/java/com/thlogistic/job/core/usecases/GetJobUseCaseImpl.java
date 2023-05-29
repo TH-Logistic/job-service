@@ -37,6 +37,7 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
     private final JobRepository jobRepository;
     private final DriverJobRepository driverJobRepository;
     private final JobProductRepository jobProductRepository;
+    private final GetNumberOfTripsOfDriverUseCase getNumberOfTripsOfDriverUseCase;
     private final ProductClient productClient;
     private final RouteClient routeClient;
     private final TransportationClient transportationClient;
