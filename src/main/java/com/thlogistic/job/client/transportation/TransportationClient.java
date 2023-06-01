@@ -29,6 +29,13 @@ public interface TransportationClient {
     })
     BaseResponse<GetGarageDto> getGarage(@Param("token") String token, @Param("id") String id);
 
+    @RequestLine("GET /api/v1/transportation/total")
+    @Headers({
+            "Content-Type: application/json",
+            "Authorization: {token}"
+    })
+    BaseResponse<Integer> getTotalTransportation(@Param("token") String token);
+
     @RequestLine("PUT /api/v1/transportation/update-delivery-status/{transportationId}")
     @Headers({
             "Content-Type: application/json",

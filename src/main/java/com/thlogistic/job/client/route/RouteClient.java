@@ -12,4 +12,11 @@ public interface RouteClient {
             "Authorization: {token}"
     })
     BaseResponse<GetRouteDto> getRoute(@Param("token") String token, @Param("id") String id);
+
+    @RequestLine("GET /api/v1/route/total")
+    @Headers({
+            "Content-Type: application/json",
+            "Authorization: {token}"
+    })
+    BaseResponse<Integer> getTotalRoutes(@Param("token") String token);
 }

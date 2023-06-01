@@ -13,8 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GetDashboardResponse {
-    GetPieChartDto pieChart;
+    Integer totalOrders;
+    Integer totalTrucks;
+    Integer totalProducts;
+    Integer totalRoutes;
+    GetBillingStatisticResponse billing;
+    GetOrderPricePieChartDto orderPricePieChart;
+    List<GetProductTypePieChartItemDto> productsPieChart;
     List<GetLineChartItemDto> lineChart;
     List<GetRecentJobDashboardDto> recentJobs;
-    GetBillingStatisticResponse billing;
 }

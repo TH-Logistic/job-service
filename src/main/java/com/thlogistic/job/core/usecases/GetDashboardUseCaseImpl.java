@@ -5,13 +5,15 @@ import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
 import com.thlogistic.job.adapters.dtos.GetDashboardRequest;
 import com.thlogistic.job.adapters.dtos.dashboard.GetDashboardResponse;
 import com.thlogistic.job.adapters.dtos.dashboard.GetLineChartItemDto;
-import com.thlogistic.job.adapters.dtos.dashboard.GetPieChartDto;
+import com.thlogistic.job.adapters.dtos.dashboard.GetOrderPricePieChartDto;
 import com.thlogistic.job.adapters.dtos.dashboard.GetRecentJobDashboardDto;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.client.billing.BillingClient;
 import com.thlogistic.job.client.billing.GetBillingStatisticResponse;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.product.ProductClient;
+import com.thlogistic.job.client.route.RouteClient;
+import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.ports.JobProductRepository;
 import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.JobEntity;
@@ -33,6 +35,9 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
     private final JobProductRepository jobProductRepository;
     private final ProductClient productClient;
     private final BillingClient billingClient;
+    private final TransportationClient transportationClient;
+    private final RouteClient routeClient;
+    private final GetJobTotalUseCase getJobTotalUseCase;
 
     @Override
     public GetDashboardResponse execute(BaseTokenRequest<GetDashboardRequest> baseTokenRequest) {
@@ -45,15 +50,38 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
 
         GetDashboardResponse response = new GetDashboardResponse();
 
-        response.setPieChart(calculateJobPriceByType(allJobs));
-        response.setRecentJobs(getRecentJobsResponse(recentJobEntities, token));
-        response.setLineChart(calculateJobPriceInMonths(jobsByYearEntities));
+        response.setTotalOrders(getTotalOrders());
+        response.setTotalTrucks(getTotalTransportations(token));
+        response.setTotalRoutes(getTotalRoute(token));
         response.setBilling(getBillingStatistic(token));
+        response.setOrderPricePieChart(calculateJobPriceByType(allJobs));
+        response.setLineChart(calculateJobPriceInMonths(jobsByYearEntities));
+        response.setRecentJobs(getRecentJobsResponse(recentJobEntities, token));
 
         return response;
     }
 
-    private GetPieChartDto calculateJobPriceByType(List<JobEntity> entities) {
+    private Integer getTotalOrders() {
+        return getJobTotalUseCase.execute();
+    }
+
+    private Integer getTotalTransportations(String token) {
+        try {
+            return transportationClient.getTotalTransportation(token).getData();
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading total transportations");
+        }
+    }
+
+    private Integer getTotalRoute(String token) {
+        try {
+            return routeClient.getTotalRoutes(token).getData();
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading total routes");
+        }
+    }
+
+    private GetOrderPricePieChartDto calculateJobPriceByType(List<JobEntity> entities) {
         Double tonBasedJobPrice = 0.0;
         Double tripBasedJobPrice = 0.0;
         for (JobEntity entity: entities) {
@@ -63,7 +91,7 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
                 tripBasedJobPrice += entity.getTotalPrice();
             }
         }
-        return new GetPieChartDto(tonBasedJobPrice, tripBasedJobPrice);
+        return new GetOrderPricePieChartDto(tonBasedJobPrice, tripBasedJobPrice);
     }
 
     private List<GetRecentJobDashboardDto> getRecentJobsResponse(List<JobEntity> entities, String authToken) {
