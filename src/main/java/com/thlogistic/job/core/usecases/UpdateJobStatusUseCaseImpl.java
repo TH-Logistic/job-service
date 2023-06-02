@@ -1,6 +1,9 @@
 package com.thlogistic.job.core.usecases;
 
-import com.thlogistic.job.adapters.dtos.*;
+import com.thlogistic.job.adapters.dtos.BaseResponse;
+import com.thlogistic.job.adapters.dtos.BaseTokenRequest;
+import com.thlogistic.job.adapters.dtos.CreateHealthcheckRequest;
+import com.thlogistic.job.adapters.dtos.UpdateJobStatusRequest;
 import com.thlogistic.job.aop.exception.BadRequestException;
 import com.thlogistic.job.aop.exception.CustomRuntimeException;
 import com.thlogistic.job.aop.exception.DataNotFoundException;
@@ -52,10 +55,6 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
             case JOB_STARTED -> {
                 if (!currentJobStatusCode.equals(JobStatus.ASSIGNED.statusCode)) {
                     throw new BadRequestException("Invalid job status");
-                }
-
-                if (jobEntity.getEndingGarageId() == null) {
-                    throw new BadRequestException("Cannot start job without ending garage");
                 }
 
                 if (requestContent.getHealthcheck() == null ||

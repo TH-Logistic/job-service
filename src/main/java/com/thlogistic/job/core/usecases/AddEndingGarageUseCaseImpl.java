@@ -7,6 +7,7 @@ import com.thlogistic.job.aop.exception.DataNotFoundException;
 import com.thlogistic.job.client.transportation.GetGarageDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.entities.JobStatus;
+import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.utils.DateTimeHelper;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class AddEndingGarageUseCaseImpl implements AddEndingGarageUseCase {
 
     private final JobRepository jobRepository;
+    private final DriverJobRepository driverJobRepository;
     private final TransportationClient transportationClient;
 
     @Override
@@ -50,9 +52,11 @@ public class AddEndingGarageUseCaseImpl implements AddEndingGarageUseCase {
     }
 
     private void updateJobEntity(JobEntity jobEntity, String endingGarageId) {
-        jobEntity.setStatus(JobStatus.ASSIGNED.statusCode);
-        jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeInEpoch());
         jobEntity.setEndingGarageId(endingGarageId);
+        if (driverJobRepository.findByJobId(jobEntity.getJobId()).size() > 0) {
+            jobEntity.setStatus(JobStatus.ASSIGNED.statusCode);
+            jobEntity.setAssignedAt(DateTimeHelper.getCurrentTimeInEpoch());
+        }
 
         jobRepository.save(jobEntity);
     }
