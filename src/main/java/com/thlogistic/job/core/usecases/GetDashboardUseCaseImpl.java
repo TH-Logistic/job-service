@@ -12,6 +12,7 @@ import com.thlogistic.job.client.billing.BillingClient;
 import com.thlogistic.job.client.billing.GetBillingStatisticResponse;
 import com.thlogistic.job.client.product.GetProductDto;
 import com.thlogistic.job.client.product.ProductClient;
+import com.thlogistic.job.client.product.statistic.GetProductStatisticResponse;
 import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.TransportationClient;
 import com.thlogistic.job.core.ports.JobProductRepository;
@@ -57,6 +58,7 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
         response.setOrderPricePieChart(calculateJobPriceByType(allJobs));
         response.setLineChart(calculateJobPriceInMonths(jobsByYearEntities));
         response.setRecentJobs(getRecentJobsResponse(recentJobEntities, token));
+        getProductStatistic(response, token);
 
         return response;
     }
@@ -157,6 +159,16 @@ public class GetDashboardUseCaseImpl implements GetDashboardUseCase {
             return response.getData();
         } catch (Exception e) {
             throw new CustomRuntimeException("An error occurred when loading billings");
+        }
+    }
+
+    private void getProductStatistic(GetDashboardResponse dashboardResponse, String authToken) {
+        try {
+            GetProductStatisticResponse response = productClient.getTotalProductsStatistic(authToken).getData();
+            dashboardResponse.setTotalProducts(response.getTotal());
+            dashboardResponse.setProductsPieChart(response.getProducts());
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading product statistic");
         }
     }
 }

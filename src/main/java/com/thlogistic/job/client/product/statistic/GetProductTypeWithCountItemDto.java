@@ -1,15 +1,13 @@
-package com.thlogistic.job.adapters.dtos.dashboard;
+package com.thlogistic.job.client.product.statistic;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class GetProductTypePieChartItemDto {
+public class GetProductTypeWithCountItemDto {
     Integer type;
     Integer total;
 }

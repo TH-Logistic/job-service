@@ -1,6 +1,7 @@
 package com.thlogistic.job.adapters.dtos.dashboard;
 
 import com.thlogistic.job.client.billing.GetBillingStatisticResponse;
+import com.thlogistic.job.client.product.statistic.GetProductTypeWithCountItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class GetDashboardResponse {
     Integer totalRoutes;
     GetBillingStatisticResponse billing;
     GetOrderPricePieChartDto orderPricePieChart;
-    List<GetProductTypePieChartItemDto> productsPieChart;
+    List<GetProductTypeWithCountItemDto> productsPieChart;
     List<GetLineChartItemDto> lineChart;
     List<GetRecentJobDashboardDto> recentJobs;
 }

@@ -152,10 +152,8 @@ public class UpdateJobStatusUseCaseImpl implements UpdateJobStatusUseCase {
 
     private void updateTransportationStatus(String authToken, String transportationId, UpdateTransportationDeliveryStatusRequest body) {
         try {
-            System.out.println("justin transportationId: " + transportationId);
             transportationClient.updateDeliveryStatus(authToken, transportationId, body);
         } catch (Exception e) {
-            System.out.println("justin: " + e.getMessage());
             throw new CustomRuntimeException("An error occurred when update transportation status");
         }
     }

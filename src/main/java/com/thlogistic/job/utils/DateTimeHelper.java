@@ -18,13 +18,6 @@ public class DateTimeHelper {
         return System.currentTimeMillis();
     }
 
-//    public static String getFormattedTimeFromEpoch(Long epoch) {
-//        Instant instant = Instant.ofEpochMilli(epoch);
-//        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("GMT+7"));
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Const.DateTimeFormat.DATE_TIME_FORMAT);
-//        return dateTime.format(formatter);
-//    }
-
     public static String getMonthOnlyFromEpoch(Long epoch) {
         Instant instant = Instant.ofEpochMilli(epoch);
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("GMT+7"));

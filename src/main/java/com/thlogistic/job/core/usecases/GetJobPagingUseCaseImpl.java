@@ -9,7 +9,6 @@ import com.thlogistic.job.client.route.GetRouteDto;
 import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.GetTransportationDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
-import com.thlogistic.job.core.entities.JobStatus;
 import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobProductRepository;
 import com.thlogistic.job.core.ports.JobRepository;
@@ -17,7 +16,6 @@ import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.entities.JobProductEntity;
 import com.thlogistic.job.utils.Const;
-import com.thlogistic.job.utils.DateTimeHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -86,27 +84,24 @@ public class GetJobPagingUseCaseImpl implements GetJobPagingUseCase {
             JobEntity jobEntity,
             String authToken
     ) {
-        if (jobEntity.getStatus() >= JobStatus.ASSIGNED.statusCode) {
-            List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
-                    jobEntity.getJobId()
-            );
-            if (driverJobEntities.isEmpty()) {
-                throw new CustomRuntimeException("An error occurred when loading driver");
-            }
-            DriverJobEntity driverJobEntity = driverJobEntities.get(0);
-
-            String driverId = driverJobEntity.getDriverId();
-            try {
-                BaseResponse<GetTransportationDto> getTransportationResponse =
-                        transportationClient.getTransportationByDriverId(authToken, driverId);
-                builder.licensePlate(getTransportationResponse.getData().getLicensePlate());
-                builder.driverInCharge(getTransportationResponse.getData().getMainDriver().getName());
-            } catch (Exception e) {
-                throw new CustomRuntimeException("An error occurred when loading transportation");
-            }
-        } else {
+        List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
+                jobEntity.getJobId()
+        );
+        if (driverJobEntities.isEmpty()) {
             builder.licensePlate(Const.Job.NOT_ASSIGNED);
             builder.driverInCharge(Const.Job.NOT_ASSIGNED);
+            return;
+        }
+        DriverJobEntity driverJobEntity = driverJobEntities.get(0);
+
+        String driverId = driverJobEntity.getDriverId();
+        try {
+            BaseResponse<GetTransportationDto> getTransportationResponse =
+                    transportationClient.getTransportationByDriverId(authToken, driverId);
+            builder.licensePlate(getTransportationResponse.getData().getLicensePlate());
+            builder.driverInCharge(getTransportationResponse.getData().getMainDriver().getName());
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading transportation");
         }
     }
 

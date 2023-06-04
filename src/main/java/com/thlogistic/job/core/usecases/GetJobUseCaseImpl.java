@@ -14,8 +14,6 @@ import com.thlogistic.job.client.route.RouteClient;
 import com.thlogistic.job.client.transportation.GetGarageDto;
 import com.thlogistic.job.client.transportation.GetTransportationDto;
 import com.thlogistic.job.client.transportation.TransportationClient;
-import com.thlogistic.job.client.user.UserClient;
-import com.thlogistic.job.client.user.UserInfoDto;
 import com.thlogistic.job.core.entities.JobStatus;
 import com.thlogistic.job.core.ports.DriverJobRepository;
 import com.thlogistic.job.core.ports.JobProductRepository;
@@ -23,7 +21,6 @@ import com.thlogistic.job.core.ports.JobRepository;
 import com.thlogistic.job.entities.DriverJobEntity;
 import com.thlogistic.job.entities.JobEntity;
 import com.thlogistic.job.entities.JobProductEntity;
-import com.thlogistic.job.utils.DateTimeHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -113,25 +110,22 @@ public class GetJobUseCaseImpl implements GetJobUseCase {
             JobEntity jobEntity,
             String authToken
     ) {
-        if (jobEntity.getStatus() >= JobStatus.ASSIGNED.statusCode) {
-            List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
-                    jobEntity.getJobId()
-            );
-            if (driverJobEntities.isEmpty()) {
-                throw new CustomRuntimeException("An error occurred when loading driver");
-            }
-            DriverJobEntity driverJobEntity = driverJobEntities.get(0);
-
-            String driverId = driverJobEntity.getDriverId();
-            try {
-                BaseResponse<GetTransportationDto> getTransportationResponse =
-                        transportationClient.getTransportationByDriverId(authToken, driverId);
-                builder.transportation(getTransportationResponse.getData());
-            } catch (Exception e) {
-                throw new CustomRuntimeException("An error occurred when loading transportation");
-            }
-        } else {
+        List<DriverJobEntity> driverJobEntities = driverJobRepository.findByJobId(
+                jobEntity.getJobId()
+        );
+        if (driverJobEntities.isEmpty()) {
             builder.transportation(null);
+            return;
+        }
+        DriverJobEntity driverJobEntity = driverJobEntities.get(0);
+
+        String driverId = driverJobEntity.getDriverId();
+        try {
+            BaseResponse<GetTransportationDto> getTransportationResponse =
+                    transportationClient.getTransportationByDriverId(authToken, driverId);
+            builder.transportation(getTransportationResponse.getData());
+        } catch (Exception e) {
+            throw new CustomRuntimeException("An error occurred when loading transportation");
         }
     }
 
