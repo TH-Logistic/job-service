@@ -1,7 +1,5 @@
 package com.thlogistic.job.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -10,8 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeHelper {
     public static boolean checkDateTimeFormat(Long datetime) {
         long lowerBound = 0L;
-        long upperBound = System.currentTimeMillis();
-        return datetime >= lowerBound && datetime <= upperBound;
+        return datetime > lowerBound;
     }
 
     public static Long getCurrentTimeInEpoch() {

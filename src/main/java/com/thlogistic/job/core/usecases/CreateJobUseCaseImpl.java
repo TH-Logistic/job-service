@@ -32,7 +32,6 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
 
     private final JobRepository jobRepository;
     private final JobProductRepository jobProductRepository;
-    private final DriverJobRepository driverJobRepository;
     private final ProductClient productClient;
     private final RouteClient routeClient;
 
@@ -57,7 +56,7 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         Double jobPrice;
         Boolean isTonBasedJob = isTonBasedJob(jobProducts, routeDto.getTonBasedLimit());
         if (isTonBasedJob) {
-            jobPrice = calculateTotalProductPrice(jobProducts);
+            jobPrice = calculateTotalProductPrice(jobProducts, routeDto.getLength());
         } else {
             jobPrice = routeDto.getTripBasedCost();
         }
@@ -138,13 +137,13 @@ public class CreateJobUseCaseImpl implements CreateJobUseCase {
         return jobProducts;
     }
 
-    private Double calculateTotalProductPrice(List<JobProduct> jobProducts) {
+    private Double calculateTotalProductPrice(List<JobProduct> jobProducts, Double routeLength) {
         Double totalProductPrice = 0.0;
 
         for (JobProduct jobProduct : jobProducts) {
             totalProductPrice += jobProduct.getGrandTotal();
         }
-        return totalProductPrice;
+        return totalProductPrice * routeLength;
     }
 
     private boolean isTonBasedJob(List<JobProduct> jobProducts, Double tonBasedLimit) {
